@@ -15,15 +15,17 @@ USERNAME_INPUT = By.XPATH, "//input[@type='text' and contains(@class, 'Weup5')]"
 PASSWORD_INPUT = By.XPATH, "//input[@type='password']"
 BUTTON_LOGOUT = By.XPATH, "//button[@type='submit' and contains(text(), 'Войти')]"
 
-ERROR_TEXT = By.XPATH, "//*[text() = 'Пожалуйста, проверьте свой пароль и имя аккаунта и попробуйте снова.']"
+ERROR_TEXT = By.XPATH, "//button[@type='submit' and contains(text(), 'Войти')]/../following-sibling::div[1]"
 
 faker = Faker()
 
 random_username = faker.user_name()
 random_password = faker.password()
 
+TIMEOUT = 30
+
 def test_first(driver):
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, TIMEOUT)
 
     driver.get(URL)
 
@@ -41,10 +43,9 @@ def test_first(driver):
 
     er = wait.until(EC.visibility_of_element_located(ERROR_TEXT))
 
-    er_q = er.text
+    actual_result = er.text
 
-    er_txt = 'Пожалуйста, проверьте свой пароль и имя аккаунта и попробуйте снова.'
+    expected_result = 'Пожалуйста, проверьте свой пароль и имя аккаунта и попробуйте снова.'
 
-    assert er_q == er_txt
+    assert actual_result == expected_result
 
-    time.sleep(5)
