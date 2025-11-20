@@ -8,15 +8,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 URL = "https://store.steampowered.com/"
-LOGO = By.XPATH, "//*[@placeholder='Поиск по магазину']"
-QR_LOGO = By.XPATH, "//*[@style='position: relative;']//img"
-BUTTON_LOGIN = By.XPATH, "//*[@class='global_action_link' and contains(@href, '/login/')]"
-USERNAME_INPUT = By.XPATH, "//*[@id='responsive_page_template_content']//input[@type='text']"
-PASSWORD_INPUT = By.XPATH, "//input[@type='password']"
-BUTTON_LOGOUT = By.XPATH, "//button[@type='submit' and contains(text(), 'Войти')]"
-LOADER = By.XPATH, "//button[@type='submit' and @disabled]"
+LOGO = (By.XPATH, "//*[@placeholder='Поиск по магазину']")
+QR_LOGO = (By.XPATH, "//*[@id='responsive_page_template_content']//img")
+BUTTON_LOGIN = (By.XPATH, "//*[@class='global_action_link' and contains(@href, '/login/')]")
+USERNAME_INPUT = (By.XPATH, "//*[@id='responsive_page_template_content']//input[@type='text']")
+PASSWORD_INPUT = (By.XPATH, "//input[@type='password']")
+BUTTON_LOGOUT = (By.XPATH, "//button[@type='submit' and contains(text(), 'Войти')]")
+LOADER = (By.XPATH, "//button[@type='submit' and @disabled]")
 
-ERROR_TEXT = By.XPATH, "//*[@id='responsive_page_template_content']//div[contains(text(), 'Пожалуйста, проверьте свой пароль')]"
+ERROR_TEXT = (By.XPATH, "//*[@id='responsive_page_template_content']//div[contains(text(), 'Пожалуйста, проверьте свой пароль')]")
 
 faker = Faker()
 
