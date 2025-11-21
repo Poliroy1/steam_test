@@ -20,8 +20,8 @@ ERROR_TEXT = (By.XPATH, "//*[@id='responsive_page_template_content']//div[contai
 
 faker = Faker()
 
-random_username = faker.user_name()
-random_password = faker.password()
+RANDOM_USERNAME = faker.user_name()
+RANDOM_PASSWORD = faker.password()
 
 TIMEOUT = 30
 
@@ -36,11 +36,13 @@ def test_first(driver):
 
     wait.until(EC.presence_of_element_located(QR_LOGO))
 
-    wait.until(EC.visibility_of_element_located(USERNAME_INPUT)).send_keys(random_username)
+    wait.until(EC.visibility_of_element_located(USERNAME_INPUT)).send_keys(RANDOM_USERNAME)
 
-    wait.until(EC.visibility_of_element_located(PASSWORD_INPUT)).send_keys(random_password)
+    wait.until(EC.visibility_of_element_located(PASSWORD_INPUT)).send_keys(RANDOM_PASSWORD)
 
     wait.until(EC.element_to_be_clickable(BUTTON_LOGOUT)).click()
+
+    wait.until(EC.visibility_of_element_located(LOADER))
 
     wait.until(EC.invisibility_of_element_located(LOADER))
 
@@ -50,5 +52,6 @@ def test_first(driver):
 
     expected_result = 'Пожалуйста, проверьте свой пароль и имя аккаунта и попробуйте снова.'
 
-    assert actual_result == expected_result, 'Тест успешно прошел'
+    assert actual_result == expected_result, f'Ошибка валидации не соответствует ожидаемой. Expected: {expected_result}, Actual: {actual_result}'
+
 
