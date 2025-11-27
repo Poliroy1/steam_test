@@ -12,10 +12,7 @@ class HomePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, TIMEOUT)
 
-    def open(self, url=None):
-        if url is None:
-            url = self.URL
-        self.driver.get(url)
+    def open(self):
         self.wait.until(EC.presence_of_element_located(self.LOGO))
 
     def search_game(self, name):
