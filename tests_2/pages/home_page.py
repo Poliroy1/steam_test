@@ -3,11 +3,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class HomePage:
-    URL = 'https://store.steampowered.com/'
     LOGO = (By.XPATH, "//*[@type='submit']")
     SEARCH = (By.XPATH, "//*[@role='combobox']")
     SEARCH_BUTTON = (By.XPATH, "//*[@type='submit']")
-    UNIQUE = (By.XPATH, "//*[@id='term']")
+    UNIQUE = (By.ID, "term")
 
     def __init__(self, driver, TIMEOUT=30):
         self.driver = driver

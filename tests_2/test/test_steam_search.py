@@ -8,14 +8,14 @@ URLS = {
 }
 
 @pytest.mark.parametrize("lang", ["en", "ru"])
-@pytest.mark.parametrize("game,N", [("The Witcher", 10), ("Fallout", 20)])
-def test_steam_search(driver, lang, game, N):
+@pytest.mark.parametrize("game,n", [("The Witcher", 10), ("Fallout", 20)])
+def test_steam_search(driver, lang, game, n):
     home = HomePage(driver)
     results = SearchResultsPage(driver)
 
     home.open(URLS[lang])
     home.search_game(game)
     results.apply_price_filter()
-    prices = results.get_prices(N)
+    prices = results.get_prices(n)
 
     assert prices == sorted(prices, reverse=True)

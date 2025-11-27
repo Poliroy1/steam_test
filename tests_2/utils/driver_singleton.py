@@ -6,19 +6,16 @@ class DriverSingleton:
     _instance = None
     _driver = None
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-    def get_driver(self):
-        if self._driver is None:
+    @classmethod
+    def get_driver(cls):
+        if cls._driver is None:
             service = Service(ChromeDriverManager().install())
-            self._driver = webdriver.Chrome(service=service)
-            self._driver.implicitly_wait(10)
-        return self._driver
+            cls._driver = webdriver.Chrome(service=service)
+            cls._driver.implicitly_wait(10)
+        return cls._driver
 
-    def close_driver(self):
-        if self._driver:
-            self._driver.quit()
-            self._driver = None
+    @classmethod
+    def close_driver(cls):
+        if cls._driver:
+            cls._driver.quit()
+            cls._driver = None
