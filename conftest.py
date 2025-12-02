@@ -1,5 +1,5 @@
 import pytest
-from utils import DriverSingleton
+from utils.driver_singleton import DriverSingleton
 
 @pytest.fixture
 def driver():

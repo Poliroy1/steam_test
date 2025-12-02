@@ -11,7 +11,6 @@ class DriverSingleton:
         if cls._driver is None:
             service = Service(ChromeDriverManager().install())
             cls._driver = webdriver.Chrome(service=service)
-            cls._driver.implicitly_wait(10)
         return cls._driver
 
     @classmethod

@@ -1,21 +1,24 @@
 import pytest
 from pages.home_page import HomePage
 from pages.search_results_page import SearchResultsPage
+from utils.config_reader import ConfigReader
 
-URLS = {
-    "en": "https://store.steampowered.com/?l=english",
-    "ru": "https://store.steampowered.com/?l=russian"
-}
+cfg = ConfigReader()
 
-@pytest.mark.parametrize("lang", ["en", "ru"])
+@pytest.mark.parametrize("lang", cfg.languages)
 @pytest.mark.parametrize("game,n", [("The Witcher", 10), ("Fallout", 20)])
 def test_steam_search(driver, lang, game, n):
     home = HomePage(driver)
     results = SearchResultsPage(driver)
 
-    home.open(URLS[lang])
+    url = cfg.url_for_lang(lang)
+    driver.get(url)
+    home.wait_for_open()
+
     home.search_game(game)
     results.apply_price_filter()
-    prices = results.get_prices(n)
+    actual_result = results.get_prices(n)
 
-    assert prices == sorted(prices, reverse=True)
+    expected = sorted(actual_result, reverse=True)
+
+    assert actual_result == expected, f'Тест для {game} на {lang} прошел успешно! Цены правильно отсортированы: {actual_result}'
