@@ -21,4 +21,4 @@ def test_steam_search(driver, lang, game, n):
 
     expected = sorted(actual_result, reverse=True)
 
-    assert actual_result == expected, f'Тест для {game} на {lang} прошел успешно! Цены правильно отсортированы: {actual_result}'
+    assert actual_result == expected, f'Цены отсортированы неверно. Ожидалось {expected}, получили {actual_result}'
