@@ -1,4 +1,4 @@
-from core.browser import Browser
+from browser.browser import Browser
 from elements.web_element import WebElement
 from logger.logger import Logger
 from pages.base_page import BasePage
@@ -6,13 +6,14 @@ from elements.label import Label
 from elements.button import Button
 
 class IframePage(BasePage):
-    UNIQUE_ELEMENT_LOC = "//*[@id='framesWrapper']//*[contains(@class,'text-center')]"
-    NESTED_FRAMES_BUTTON = "//*[@id='item-3']"
-    CHILD_IFRAME = "//*[@id='framesWrapper']//*[@srcdoc='<p>Child Iframe</p>']"
+
+    UNIQUE_ELEMENT_LOC = "//*[@id='app']//*[contains(@class,'text-center')]"
+    NESTED_FRAMES_BUTTON = "//*[@id='item-3']//*[contains(@class, 'text') and contains(text(), 'Nested Frames')]"
+    CHILD_IFRAME = "//iframe"
     PARENT_FRAME = "//*[@id='frame1']"
-    PARENT_TEXT = "//*[contains(text(), 'Parent frame']"
-    CHILD_TEXT = "//*[contains(text(), 'Child Iframe']"
-    FRAMES_BUTTON = "//*[@id='item-2']"
+    PARENT_TEXT = "//*[contains(text(), 'Parent frame')]"
+    CHILD_TEXT = "//*[contains(text(), 'Child Iframe')]"
+    FRAMES_BUTTON = "//*[@id='item-2']//*[contains(@class, 'text') and contains(text(), 'Frames')]"
     UP_FRAME = "//*[@id='frame1']"
     DOWN_FRAME = "//*[@id='frame2']"
     HEADER = "//*[@id='sampleHeading']"
@@ -20,6 +21,7 @@ class IframePage(BasePage):
     def __init__(self, browser: Browser) -> None:
         super().__init__(browser)
         self.page_name = 'iframe'
+
         self.unique_element = Label(self.browser, self.UNIQUE_ELEMENT_LOC, description='Unique element -> Label')
         self.nested_element = Button(self.browser, self.NESTED_FRAMES_BUTTON, description='Nested element -> Button')
         self.child_iframe = WebElement(self.browser, self.CHILD_IFRAME, description='IFRAME One -> WebElement')
@@ -57,12 +59,14 @@ class IframePage(BasePage):
         Logger.info(f"{self} Click Up Frame")
         self.browser.switch_to_frame(self.up_frame)
         text = self.header.get_text()
+        self.browser.switch_to_default_content()
         return text
 
     def get_text_to_down_iframe(self) -> str:
         Logger.info(f"{self} Click Down Frame")
         self.browser.switch_to_frame(self.down_frame)
         text = self.header.get_text()
+        self.browser.switch_to_default_content()
         return text
 
 

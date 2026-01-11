@@ -1,38 +1,30 @@
-import os
 import pytest
-from core.browser import Browser
-from core.config_reader import ConfigReader
+from browser.browser_factory import BrowserFactory
+from browser.browser import Browser
 from logger.logger import Logger
-from core.browser_factory import BrowserFactory
 
-@pytest.fixture(scope="session")
-def config():
-    return ConfigReader()
-
-@pytest.fixture(scope="session")
-def base_url(config):
-    return config.get("base_url")
-
-@pytest.fixture(scope="session", autouse=True)
-def prepare_logs():
-    os.makedirs("logs", exist_ok=True)
-
+# ----------------------------
+# Фикстура браузера на всю сессию
+# ----------------------------
 @pytest.fixture
-def browser(config):
-    options = []
-    if config.get("headless", False):
-        options.append("--headless")
+def browser():
+    # Просто создаём драйвер через фабрику
+    driver = BrowserFactory.get_driver()  # без лишних параметров
 
-    driver = BrowserFactory.get_driver(options=options)
+    # Оборачиваем в наш Browser — таймауты и page_load_timeout уже внутри класса Browser
     browser = Browser(driver)
 
+    Logger.info("Browser started")
     yield browser
-    browser.quit()
 
+    Logger.info("Browser quitting")
+    browser.quit()
+# ----------------------------
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item):
     outcome = yield
     rep = outcome.get_result()
 
+    # Если тест упал на этапе выполнения
     if rep.when == "call" and rep.failed:
         Logger.error(f"Test failed: {item.name}")

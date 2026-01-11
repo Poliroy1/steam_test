@@ -1,8 +1,7 @@
 import logging
 import time
 
-
-from selenium.common import WebDriverException
+from selenium.common import WebDriverException, NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,11 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from elements.base_element import BaseElement
 from logger.logger import Logger
 
+
 class Browser:
     DEFAULT_TIMEOUT = 10
     PAGE_LOAD_TIMEOUT = 120
 
-    def __init__(self, action, driver: WebDriver):
+    def __init__(self, driver: WebDriver, action = None):
         self.action = action
         self._driver = driver
         self._driver.set_page_load_timeout(self.PAGE_LOAD_TIMEOUT)
@@ -48,7 +48,7 @@ class Browser:
             logging.error(f"{self}: {err}")
             raise
 
-    def execute_script(self,script: str, *args) -> None:
+    def execute_script(self, script: str, *args) -> None:
         Logger.info(f"{self}: execute script '{script}', args = '{args}'")
         try:
             self._driver.execute_script(script, *args)
@@ -84,7 +84,6 @@ class Browser:
                     Logger.error(f"{self}: window with title '{title}' not found.")
                     raise ValueError(f"{self}: window with title '{title}' not found.")
 
-
     def wait_alert_present(self):
         Logger.info(f"{self}: wait alert present")
         return self._wait.until(EC.alert_is_present())
@@ -112,15 +111,55 @@ class Browser:
 
     def switch_to_default_content(self):
         Logger.info(f"{self}: switch to default content")
-        return self._driver.switch_to.default_content()
+        self._driver.switch_to.default_content()
 
     def refresh(self):
         Logger.info(f"{self}: refresh")
         self._driver.refresh()
 
-    def scroll_to_element(self, element):
-        Logger.info(f"{self}: scroll to element")
-        self._driver.execute_script("arguments[0].scrollIntoView({behavior: 'auto', block: 'center'});", element)
+    def go_back(self) -> None:
+        Logger.info(f"{self}: navigating back to the previous page")
+        try:
+            self._driver.back()
+        except Exception as err:
+            Logger.error(f"{self}: failed to navigate back — {err}")
+            raise
+
+    def open(self, url: str, username=None, password=None):
+        if username and password:
+            protocol, rest = url.split("://")
+            url = f"{protocol}://{username}:{password}@{rest}"
+        self.driver.get(url)
+
+    def get_title(self):
+        Logger.info(f"{self}: get title")
+        title = self._driver.title
+        return title
+
+    def get_current_window_handle(self) -> str:
+        Logger.info(f"{self}: get current window handle")
+        return self._driver.current_window_handle
+
+    def switch_to_window_by_handle(self, handle: str) -> None:
+        Logger.info(f"{self}: switch to window by handle: {handle}")
+
+        handles = self._driver.window_handles
+
+        if handle not in handles:
+            raise ValueError(
+                f"{self}: window handle '{handle}' not found. "
+                f"Available handles: {handles}"
+            )
+
+        self._driver.switch_to.window(handle)
+
+    def get_window_handles(self):
+        Logger.info(f"{self}: get all window handles")
+        return self._driver.window_handles
+
+    def get_current_url(self) -> str:
+        Logger.info(f"{self}: get current url")
+        return self._driver.current_url
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}[{self._driver.session_id}]"

@@ -1,17 +1,21 @@
+from typing import List
+
 from typing_extensions import Self
 
-from core.browser import Browser
+from browser.browser import Browser
 from elements.web_element import WebElement
+from logger.logger import Logger
+
 
 class MultiWebElement:
     DEFAULT_TIMEOUT = 10
 
     def __init__(
-        self,
-        browser: Browser,
-        formattable_xpath: str,
-        description: str = None,
-        timeout: int = None,
+            self,
+            browser: Browser,
+            formattable_xpath: str,
+            description: str = None,
+            timeout: int = None,
     ) -> None:
         self.index = 1
 
@@ -28,13 +32,22 @@ class MultiWebElement:
         current_element = WebElement(
             self.browser,
             self.formattable_xpath.format(self.index),
-            f"{self.description}[[self.index]]",
+            f"{self.description}[{self.index}]",
             timeout=self.timeout)
         if not current_element.is_exists():
             raise StopIteration
-        else:
-            self.index += 1
-            return current_element
+
+        self.index += 1
+        return current_element
+
+    def get_all_elements(self) -> List[WebElement]:
+        return [element for element in self]
+
+    def count(self):
+        elements = self.get_all_elements()
+        count = len(elements)
+        Logger.info(f"{self}: found {count} elements")
+        return count
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}[{self.description}]"

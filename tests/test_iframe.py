@@ -1,10 +1,11 @@
 from pages.iframe_page import IframePage
 
+url = "https://demoqa.com/frames"
 
 def test_iframe(browser):
     page = IframePage(browser)
 
-    browser.get('https://demoqa.com/frames')
+    browser.get(url)
     page.wait_for_open()
 
     page.click_nested()

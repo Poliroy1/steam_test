@@ -1,12 +1,11 @@
-import pytest
 from pages.horizontal_slider_page import HorizontalSliderPage
 
+url = "https://the-internet.herokuapp.com/horizontal_slider"
 
 def test_horizontal_slider(browser):
     page = HorizontalSliderPage(browser)
 
-    browser.get('https://the-internet.herokuapp.com/horizontal_slider')
-
+    browser.get(url)
     page.wait_for_open()
 
     target_value = page.set_random_slider_value()

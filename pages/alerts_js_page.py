@@ -1,6 +1,6 @@
 from faker import Faker
 
-from core.browser import Browser
+from browser.browser import Browser
 from elements.web_element import WebElement
 from elements.button import Button
 
@@ -39,14 +39,7 @@ class AlertsJSPage(BasePage):
         Logger.info(f"{self.page_name}: click JS Prompt button")
         self.js_prompt_button.js_click()
 
-    def get_alert_text(self) -> None:
-        Logger.info(f"{self}: get alert text")
-        text = self.browser.get_alert_text()
-        return text
 
-    def accept_alert(self) -> None:
-        Logger.info(f"{self}: accept alert")
-        self.browser.accept_alert()
 
 
 

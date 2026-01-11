@@ -1,21 +1,24 @@
-import os
+from pathlib import Path
 from pages.upload_image_page import UploadImagePage
+
+url = "https://the-internet.herokuapp.com/upload"
+file_name = "Image.png"
 
 def test_upload_image(browser):
     page = UploadImagePage(browser)
 
-    browser.get('https://the-internet.herokuapp.com/upload')
+    browser.get(url)
     page.wait_for_open()
 
-    file_path = os.path.abspath("resources/test_file.txt")
-    file_name = os.path.basename(file_path)
+    file_path = Path(__file__).parent.parent / "resources" / file_name
 
-    page.upload_file(file_path)
+    page.upload_file_click(str(file_path))
 
-    page.success_text.wait_for_presence()
+    assert "File Uploaded!" == page.get_upload_text()
 
-    assert page.success_text.is_displayed(), \
-        "Ожидалась надпись 'File Uploaded!', но она не появилась"
+    # Проверяем, что имя файла совпадает
+    expected_file_name = file_name  # только имя файла
+    assert page.get_file_name() == expected_file_name, \
+        f"Ожидалось имя файла '{expected_file_name}', но отображается '{page.get_file_name()}'"
 
-    assert page.file_name.get_text() == file_name, \
-        f"Ожидалось имя файла '{file_name}', но отображается '{page.file_name.get_text()}'"
+

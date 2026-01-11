@@ -1,4 +1,4 @@
-from core.browser import Browser
+from browser.browser import Browser
 from logger.logger import Logger
 
 class BasePage:

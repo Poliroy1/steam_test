@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.browser import Browser
+    from browser.browser import Browser
 from logger.logger import Logger
 
 
@@ -52,6 +52,7 @@ class BaseElement:
         except TimeoutException as err:
             Logger.error(f"{self}:{err}")
             raise
+
     def _wait_for_not(self, expected_condition) -> None:
         try:
             Logger.info(f"{self}: wait for not {expected_condition.__name__}")
@@ -72,6 +73,13 @@ class BaseElement:
     def is_exists(self) -> bool:
         try:
             self.wait_for_presence()
+            return True
+        except TimeoutException:
+            return False
+
+    def is_displayed(self) -> bool:
+        try:
+            self.wait_for_visible()
             return True
         except TimeoutException:
             return False
@@ -112,7 +120,7 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
-    def get_css_property(self, name:str) -> str:
+    def get_css_property(self, name: str) -> str:
         element = self.wait_for_presence()
         Logger.info(f"{self}: get css property '{name}'")
         try:
@@ -123,13 +131,14 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
-    @property
-    def get_element(self) -> WebElement:
-        """Получаем Selenium WebElement"""
-        return self.wait_for_visible()
+    def hover(self):
+        element = self.wait_for_visible()
+        ActionChains(self.browser.driver).move_to_element(element).perform()
+        Logger.info(f"{self}: hover")
+        return self\
 
-    @property
-    def hover(self) -> None:
-        ActionChains(self.browser.driver) \
-            .move_to_element(self.get_element) \
-            .perform()
+    def scroll_to_element(self):
+        Logger.info(f"{self}: scroll to element")
+        return self.browser.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);", self.wait_for_visible())
+
+

@@ -1,6 +1,0 @@
-{
-  "base_url": "http://the-internet.herokuapp.com",
-  "browser": "chrome",
-  "timeout": 10,
-  "headless": false
-}

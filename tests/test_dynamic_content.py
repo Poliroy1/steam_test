@@ -1,14 +1,14 @@
 from pages.dynamic_content_page import DynamicPage
 
+url = "https://the-internet.herokuapp.com/dynamic_content"
+count_refresh = 100
 
 def test_dynamic_content(browser):
     page = DynamicPage(browser)
 
-    browser.get('http://theinternet.herokuapp.com/dynamic_content')
+    browser.get(url)
     page.wait_for_open()
 
-    page.get_duplicate_image_src()
-
-    duplicates = page.get_duplicate_image_src()
+    duplicates = page.get_duplicate_image_src(count_refresh)
 
     assert len(duplicates) > len(set(duplicates)), f"Ожидалось хотя бы два одинаковых изображения, но получили: {duplicates}"

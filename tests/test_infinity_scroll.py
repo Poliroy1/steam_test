@@ -1,16 +1,14 @@
 from pages.Infinity_scroll_page import InfinityScrollPage
 
+url = "https://the-internet.herokuapp.com/infinite_scroll"
+my_age = 23
 
 def test_infinite_scroll_paragraphs(browser):
-    expected_paragraphs = 23
-
     page = InfinityScrollPage(browser)
 
-    browser.get('https://the-internet.herokuapp.com/infinite_scroll')
+    browser.get(url)
     page.wait_for_open()
 
-    page.scroll_until_paragraph_count(expected_paragraphs)
+    count_paragraphs = page.get_paragraph(my_age)
 
-    actual_count = page.get_paragraph_count()
-
-    assert actual_count == expected_paragraphs, f"Expected {expected_paragraphs} paragraphs, but found {actual_count}"
+    assert len(count_paragraphs) == my_age, f"Expected :{my_age} not in {count_paragraphs}"

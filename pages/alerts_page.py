@@ -1,6 +1,6 @@
 from faker import Faker
 
-from core.browser import Browser
+from browser.browser import Browser
 from elements.web_element import WebElement
 from elements.button import Button
 
@@ -10,12 +10,12 @@ from pages.base_page import BasePage
 faker = Faker()
 
 class AlertsPage(BasePage):
-    UNIQUE_ELEMENT_LOC = "//*[@id='page-footer']"
+    UNIQUE_ELEMENT_LOC = "page-footer"
 
     JS_ALERT_BUTTON = "//button[@onclick='jsAlert()']"
     JS_CONFIRM_BUTTON = "//button[@onclick='jsConfirm()']"
     JS_PROMPT_BUTTON = "//button[@onclick='jsPrompt()']"
-    RESULT_TEXT = "//*[@id='result']"
+    RESULT_TEXT = "result"
 
     def __init__(self, browser: Browser):
         super().__init__(browser)
