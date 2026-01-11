@@ -2,17 +2,19 @@ import pytest
 from pages.home_page import HomePage
 from pages.search_results_page import SearchResultsPage
 from utils.config_reader import ConfigReader
+from utils.driver_singleton import DriverSingleton
 
 cfg = ConfigReader()
 
 @pytest.mark.parametrize("lang", cfg.languages)
 @pytest.mark.parametrize("game,n", [("The Witcher", 10), ("Fallout", 20)])
 def test_steam_search(driver, lang, game, n):
+    driver = DriverSingleton.get_driver(lang)
+
     home = HomePage(driver)
     results = SearchResultsPage(driver)
 
-    url = cfg.url_for_lang(lang)
-    driver.get(url)
+    home.open()
     home.wait_for_open()
 
     home.search_game(game)

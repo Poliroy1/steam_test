@@ -22,3 +22,6 @@ class HomePage:
         self.wait.until(EC.visibility_of_element_located(self.SEARCH)).send_keys(name)
         self.wait.until(EC.element_to_be_clickable(self.SEARCH_BUTTON)).click()
         self.wait.until(EC.visibility_of_element_located(self.UNIQUE))
+
+    def open(self):
+        self.driver.get(cfg.base_url)
