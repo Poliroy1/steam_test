@@ -135,10 +135,9 @@ class BaseElement:
         element = self.wait_for_visible()
         ActionChains(self.browser.driver).move_to_element(element).perform()
         Logger.info(f"{self}: hover")
-        return self\
+        return self
 
     def scroll_to_element(self):
         Logger.info(f"{self}: scroll to element")
-        return self.browser.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);", self.wait_for_visible())
-
-
+        return self.browser.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);",
+                                                  self.wait_for_visible())
