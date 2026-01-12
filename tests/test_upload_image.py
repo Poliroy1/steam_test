@@ -4,6 +4,7 @@ from pages.upload_image_page import UploadImagePage
 url = "https://the-internet.herokuapp.com/upload"
 file_name = "Image.png"
 
+
 def test_upload_image(browser):
     page = UploadImagePage(browser)
 
@@ -14,11 +15,10 @@ def test_upload_image(browser):
 
     page.upload_file_click(str(file_path))
 
-    assert "File Uploaded!" == page.get_upload_text()
+    actual_rs = page.get_upload_text()
+    expected_rs = "File Uploaded!"
+    assert expected_rs == actual_rs, f"Ожидали имя на странице: {expected_rs}, получили: {actual_rs}"
 
-    # Проверяем, что имя файла совпадает
-    expected_file_name = file_name  # только имя файла
+    expected_file_name = file_name
     assert page.get_file_name() == expected_file_name, \
-        f"Ожидалось имя файла '{expected_file_name}', но отображается '{page.get_file_name()}'"
-
-
+        f"Ожидалось имя файла '{expected_file_name}', отображается '{page.get_file_name()}'"

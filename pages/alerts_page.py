@@ -39,14 +39,7 @@ class AlertsPage(BasePage):
         Logger.info(f"{self.page_name}: click JS Prompt button")
         self.js_prompt_button.click()
 
-    def get_alert_text(self) -> None:
-        Logger.info(f"{self}: get alert text")
-        text = self.browser.get_alert_text()
-        return text
 
-    def accept_alert(self) -> None:
-        Logger.info(f"{self}: accept alert")
-        self.browser.accept_alert()
 
 
 

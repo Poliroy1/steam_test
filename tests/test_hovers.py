@@ -15,7 +15,8 @@ def test_hovers(browser):
 
         page.hover_and_click_profile(index)
 
-        assert f"users/{index + 1}" in browser.get_current_url()
+        assert f"users/{index + 1}" in browser.get_current_url(), f"Hover: ожидался переход на users/{index + 1}, "
+        f"фактический URL — {browser.get_current_url()}"
 
         browser.go_back()
         page.wait_for_open()

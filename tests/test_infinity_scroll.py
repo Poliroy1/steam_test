@@ -3,6 +3,7 @@ from pages.Infinity_scroll_page import InfinityScrollPage
 url = "https://the-internet.herokuapp.com/infinite_scroll"
 my_age = 23
 
+
 def test_infinite_scroll_paragraphs(browser):
     page = InfinityScrollPage(browser)
 

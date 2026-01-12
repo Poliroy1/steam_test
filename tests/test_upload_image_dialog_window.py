@@ -4,6 +4,7 @@ from pages.upload_image_page import UploadImagePage
 url = "https://the-internet.herokuapp.com/upload"
 file_name = "Image.png"
 
+
 def test_upload_image_via_dialog_window(browser):
     page = UploadImagePage(browser)
 
@@ -14,6 +15,10 @@ def test_upload_image_via_dialog_window(browser):
 
     page.upload_file_via_dialog(str(file_path))
 
-    assert page.get_dialog_file_name().is_displayed()
+    image_name = page.get_dialog_file_name()
 
-    assert page.get_galochka().is_displayed()
+    galochka = page.get_galochka()
+
+    assert image_name.is_displayed(), f"Имя файла отображается на странице"
+
+    assert galochka.is_displayed(), f"Галочка отображается на странице"

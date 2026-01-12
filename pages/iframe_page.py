@@ -8,7 +8,8 @@ from elements.button import Button
 class IframePage(BasePage):
 
     UNIQUE_ELEMENT_LOC = "//*[@id='app']//*[contains(@class,'text-center')]"
-    NESTED_FRAMES_BUTTON = "//*[@id='item-3']//*[contains(@class, 'text') and contains(text(), 'Nested Frames')]"
+    ALERTS_MENU = "//*[@id='app']//*[contains(@class, 'header-text') and contains (., 'Alerts, Frame & Windows')]"
+    NESTED_FRAMES_BUTTON = "//*[@id='app']//*[contains(@class, 'text') and contains(text(), 'Nested Frames')]"
     CHILD_IFRAME = "//iframe"
     PARENT_FRAME = "//*[@id='frame1']"
     PARENT_TEXT = "//*[contains(text(), 'Parent frame')]"
@@ -23,6 +24,7 @@ class IframePage(BasePage):
         self.page_name = 'iframe'
 
         self.unique_element = Label(self.browser, self.UNIQUE_ELEMENT_LOC, description='Unique element -> Label')
+        self.alerts_menu = Button(self.browser, self.ALERTS_MENU, description='Alerts menu button')
         self.nested_element = Button(self.browser, self.NESTED_FRAMES_BUTTON, description='Nested element -> Button')
         self.child_iframe = WebElement(self.browser, self.CHILD_IFRAME, description='IFRAME One -> WebElement')
         self.parent_frame = WebElement(self.browser, self.PARENT_FRAME, description='IFRAME Two -> WebElement')
@@ -33,10 +35,13 @@ class IframePage(BasePage):
         self.down_frame = WebElement(self.browser, self.DOWN_FRAME, description='DOWN Frame -> WebElement')
         self.header = WebElement(browser, self.HEADER, description="Header -> WebElement")
 
+    def click_alerts_menu(self):
+        Logger.info(f"{self} Click alerts menu button")
+        self.alerts_menu.js_click()
 
-    def click_nested(self) -> None:
+    def click_nested(self):
         Logger.info(f"{self} Click Nested Frame")
-        self.nested_element.click()
+        self.nested_element.js_click()
 
     def get_child_text(self) -> str:
         self.browser.switch_to_frame(self.parent_frame)
@@ -53,7 +58,7 @@ class IframePage(BasePage):
 
     def click_frames(self) -> None:
         Logger.info(f"{self} Click Frames")
-        self.frames_button.click()
+        self.frames_button.js_click()
 
     def get_text_to_up_iframe(self) -> str:
         Logger.info(f"{self} Click Up Frame")

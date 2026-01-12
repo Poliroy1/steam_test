@@ -18,7 +18,10 @@ def test_handlers(browser):
     first_new_handle = (handles_after - handles_before).pop()
 
     browser.switch_to_window_by_handle(first_new_handle)
-    assert page.get_header_text() == "New Window"
+    actual_rs = page.get_header_text()
+    expected_rs = "New Window"
+
+    assert actual_rs == expected_rs, f"Новое окно: ожидался заголовок '{expected_rs}', фактический — '{actual_rs}'"
 
     browser.switch_to_window_by_handle(main_handle)
     page.wait_for_open()
@@ -30,7 +33,10 @@ def test_handlers(browser):
     second_new_handle = (handles_after - handles_before).pop()
 
     browser.switch_to_window_by_handle(second_new_handle)
-    assert page.get_header_text() == "New Window"
+    actual_rs = page.get_header_text()
+    expected_rs = "New Window"
+
+    assert actual_rs == expected_rs, f"Второе окно: ожидался заголовок '{expected_rs}', фактический — '{actual_rs}'"
 
     browser.switch_to_window_by_handle(main_handle)
     page.wait_for_open()
