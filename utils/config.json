@@ -1,0 +1,13 @@
+{
+  "timeout": 30,
+  "languages": ["en", "ru"],
+  "browser": {
+    "lang_in_options": true,
+    "lang_in_cookie": false,
+    "lang_in_ui": false
+  },
+
+  "urls": {
+    "base": "https://store.steampowered.com/"
+  }
+}
