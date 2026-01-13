@@ -5,13 +5,13 @@ from utils.config_reader import ConfigReader
 
 cfg = ConfigReader()
 
+
 class SearchResultsPage:
     SORTER = (By.ID, "sort_by_trigger")
     FILTER = (By.ID, "Price_DESC")
     SEARCH_RESULT = (By.ID, "search_resultsRows")
     GAMES_PRICE = (By.XPATH, "//*[contains(@class,'search_price_discount_combined')]")
     LOADER = (By.XPATH, "//*[@id = 'search_result_container' and @style = 'opacity: 0.5;']")
-
 
     def __init__(self, driver, TIMEOUT=None):
         self.driver = driver
@@ -25,8 +25,6 @@ class SearchResultsPage:
         overlay_wait.until(EC.visibility_of_element_located(self.LOADER))
         self.wait.until(EC.invisibility_of_element_located(self.LOADER))
 
-
-
     def get_prices(self, n):
         self.wait.until(EC.presence_of_element_located(self.SEARCH_RESULT))
         elements = self.wait.until(EC.presence_of_all_elements_located(self.GAMES_PRICE))
@@ -39,4 +37,3 @@ class SearchResultsPage:
                 break
 
         return prices
-

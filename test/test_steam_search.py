@@ -6,6 +6,7 @@ from utils.driver_singleton import DriverSingleton
 
 cfg = ConfigReader()
 
+
 @pytest.mark.parametrize("lang", cfg.languages)
 @pytest.mark.parametrize("game,n", [("The Witcher", 10), ("Fallout", 20)])
 def test_steam_search(driver, lang, game, n):
@@ -14,7 +15,7 @@ def test_steam_search(driver, lang, game, n):
     home = HomePage(driver)
     results = SearchResultsPage(driver)
 
-    home.open()
+    driver.get(cfg.base_url)
     home.wait_for_open()
 
     home.search_game(game)
@@ -24,3 +25,5 @@ def test_steam_search(driver, lang, game, n):
     expected = sorted(actual_result, reverse=True)
 
     assert actual_result == expected, f'Цены отсортированы неверно. Ожидалось {expected}, получили {actual_result}'
+
+    DriverSingleton.close_driver()
