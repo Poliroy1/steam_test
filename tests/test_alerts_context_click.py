@@ -1,11 +1,12 @@
 from pages.alerts_context_click_page import AlertsContextClickPage
 
-url = 'https://the-internet.herokuapp.com/context_menu'
+URL = 'https://the-internet.herokuapp.com/context_menu'
+
 
 def test_alerts_context_click(browser):
     page = AlertsContextClickPage(browser)
 
-    browser.get(url)
+    browser.get(URL)
     page.wait_for_open()
 
     page.click_right_button()

@@ -1,12 +1,12 @@
 from pages.handlers_page import HandlersPage
 
-url = "https://the-internet.herokuapp.com/windows"
+URL = "https://the-internet.herokuapp.com/windows"
 
 
 def test_handlers(browser):
     page = HandlersPage(browser)
 
-    browser.get(url)
+    browser.get(URL)
     page.wait_for_open()
 
     main_handle = browser.get_current_window_handle()

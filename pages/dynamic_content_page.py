@@ -30,4 +30,4 @@ class DynamicPage(BasePage):
             self.browser.refresh()
             count += 1
 
-        raise AssertionError (f"{count} кол-во повторений не совпало")
+        raise RuntimeError (f"{count} кол-во повторений не совпало")

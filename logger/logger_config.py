@@ -1,6 +1,7 @@
 import logging
 import os
 
+
 class LoggerConfig:
     LOGS_DIR_NAME = 'logs'
     LOGGER_NAME = 'Logger'

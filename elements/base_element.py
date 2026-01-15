@@ -139,5 +139,6 @@ class BaseElement:
 
     def scroll_to_element(self):
         Logger.info(f"{self}: scroll to element")
-        return self.browser.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);",
-                                                  self.wait_for_visible())
+        element = self.wait_for_visible()
+        return self.browser.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'end'});",
+                                                  element)

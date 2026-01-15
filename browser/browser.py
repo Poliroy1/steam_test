@@ -14,7 +14,7 @@ class Browser:
     DEFAULT_TIMEOUT = 10
     PAGE_LOAD_TIMEOUT = 120
 
-    def __init__(self, driver: WebDriver, action = None):
+    def __init__(self, driver: WebDriver, action=None):
         self.action = action
         self._driver = driver
         self._driver.set_page_load_timeout(self.PAGE_LOAD_TIMEOUT)

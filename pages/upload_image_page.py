@@ -17,6 +17,7 @@ class UploadImagePage(BasePage):
     DIALOG_WINDOW = "drag-drop-upload"
     GALOCHKA = "//*[@id='drag-drop-upload']//*[contains(@class, 'dz-success-mark')]//span"
     DIALOG_FILE_NAME = "//*[contains(@class, 'dz-filename')]//span"
+
     def __init__(self, browser):
         super().__init__(browser)
         self.page_name = 'upload_image_page'
@@ -57,4 +58,3 @@ class UploadImagePage(BasePage):
     def get_dialog_file_name(self):
         Logger.info(f"{self}: get dialog file name")
         return self.dialog_file_name
-

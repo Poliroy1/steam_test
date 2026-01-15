@@ -1,13 +1,11 @@
-from elements.web_element import WebElement
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common import WebDriverException
+
 from logger.logger import Logger
+from elements.input import Input
 from selenium.webdriver.common.keys import Keys
 
 
-class SliderElement(WebElement):
-    def __init__(self, browser, locator, description: str):
-        super().__init__(browser, locator, description)
-
+class SliderElement(Input):
     def get_min_value(self) -> float:
         return float(self.get_attribute("min"))
 
@@ -20,7 +18,16 @@ class SliderElement(WebElement):
     def get_current_value(self) -> float:
         return float(self.get_attribute("value"))
 
-    def set_value(self, target_value: float) -> None:
+    def _send_keys(self, keys: str):
+        element = self.wait_for_visible()
+        Logger.info(f"{self}: send keys = '{repr(keys)}'")
+        try:
+            element.send_keys(keys)
+        except WebDriverException as err:
+            Logger.error(f"{self}: {err}")
+            raise
+
+    def set_value(self, target_value: float):
         Logger.info(f"Setting slider to value {target_value}")
 
         min_value = self.get_min_value()
@@ -36,7 +43,6 @@ class SliderElement(WebElement):
             return
         key = Keys.ARROW_RIGHT if steps > 0 else Keys.ARROW_LEFT
 
-        slider_element = self.wait_for_presence()
-        slider_element.click()
-        slider_element.send_keys(Keys.HOME)
-        slider_element.send_keys(Keys.ARROW_RIGHT * steps)
+        self.click()
+        self._send_keys(Keys.HOME)
+        self._send_keys(key * steps)

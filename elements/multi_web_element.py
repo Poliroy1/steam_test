@@ -43,6 +43,7 @@ class MultiWebElement:
     def get_all_elements(self) -> List[WebElement]:
         return [element for element in self]
 
+    @property
     def count(self):
         elements = self.get_all_elements()
         count = len(elements)

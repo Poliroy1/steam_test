@@ -10,7 +10,6 @@ class AlertsContextClickPage(BasePage):
     UNIQUE_ELEMENT_LOC = "hot-spot"
     HOT_SPOT = "hot-spot"
 
-
     def __init__(self, browser: Browser):
         super().__init__(browser)
         self.page_name = 'Context click'
@@ -20,11 +19,5 @@ class AlertsContextClickPage(BasePage):
     def click_right_button(self) -> None:
         Logger.info(f"{self}: click right button")
         action_chains = ActionChains(self.browser.driver)
-        element = self.hot_spot_window.wait_for_presence()
+        element = self.hot_spot_window.wait_for_clickable()
         action_chains.context_click(element).perform()
-
-
-
-
-
-

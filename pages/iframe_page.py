@@ -5,19 +5,21 @@ from pages.base_page import BasePage
 from elements.label import Label
 from elements.button import Button
 
-class IframePage(BasePage):
 
-    UNIQUE_ELEMENT_LOC = "//*[@id='app']//*[contains(@class,'text-center')]"
+class IframePage(BasePage):
+    UNIQUE_ELEMENT_LOC = "//*[@id='framesWrapper']//*[contains(@class, 'text-center') and contains(text(), 'Frames')]"
     ALERTS_MENU = "//*[@id='app']//*[contains(@class, 'header-text') and contains (., 'Alerts, Frame & Windows')]"
     NESTED_FRAMES_BUTTON = "//*[@id='app']//*[contains(@class, 'text') and contains(text(), 'Nested Frames')]"
+    UNIQUE_ELEM_NESTED_FRAME = "//*[@id='framesWrapper']//*[contains(@class, 'text-center') and contains(text(), 'Nested Frames')]"
+    UNIQUE_ELEM_FRAMES = "//*[@id='framesWrapper']//*[contains(@class, 'text-center') and contains(text(), 'Frames')]"
     CHILD_IFRAME = "//iframe"
-    PARENT_FRAME = "//*[@id='frame1']"
+    PARENT_FRAME = "frame1"
     PARENT_TEXT = "//*[contains(text(), 'Parent frame')]"
     CHILD_TEXT = "//*[contains(text(), 'Child Iframe')]"
     FRAMES_BUTTON = "//*[@id='item-2']//*[contains(@class, 'text') and contains(text(), 'Frames')]"
-    UP_FRAME = "//*[@id='frame1']"
-    DOWN_FRAME = "//*[@id='frame2']"
-    HEADER = "//*[@id='sampleHeading']"
+    UP_FRAME = "frame1"
+    DOWN_FRAME = "frame2"
+    HEADER = "sampleHeading"
 
     def __init__(self, browser: Browser) -> None:
         super().__init__(browser)
@@ -26,6 +28,8 @@ class IframePage(BasePage):
         self.unique_element = Label(self.browser, self.UNIQUE_ELEMENT_LOC, description='Unique element -> Label')
         self.alerts_menu = Button(self.browser, self.ALERTS_MENU, description='Alerts menu button')
         self.nested_element = Button(self.browser, self.NESTED_FRAMES_BUTTON, description='Nested element -> Button')
+        self.unique_nested_frame = Label(self.browser, self.UNIQUE_ELEM_NESTED_FRAME, description='Unique element -> Label')
+        self.unique_frames = Label(self.browser, self.UNIQUE_ELEM_FRAMES, description='Unique element -> Label')
         self.child_iframe = WebElement(self.browser, self.CHILD_IFRAME, description='IFRAME One -> WebElement')
         self.parent_frame = WebElement(self.browser, self.PARENT_FRAME, description='IFRAME Two -> WebElement')
         self.parent_text = WebElement(self.browser, self.PARENT_TEXT, description='Parent text -> WebElement')
@@ -42,6 +46,12 @@ class IframePage(BasePage):
     def click_nested(self):
         Logger.info(f"{self} Click Nested Frame")
         self.nested_element.js_click()
+
+    def get_unique_text_nested_frames(self):
+        return self.unique_nested_frame.get_text().lower().strip()
+
+    def get_unique_text_frames(self):
+        return self.unique_frames.get_text().lower().strip()
 
     def get_child_text(self) -> str:
         self.browser.switch_to_frame(self.parent_frame)
@@ -73,5 +83,3 @@ class IframePage(BasePage):
         text = self.header.get_text()
         self.browser.switch_to_default_content()
         return text
-
-

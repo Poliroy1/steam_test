@@ -9,6 +9,7 @@ from pages.base_page import BasePage
 
 faker = Faker()
 
+
 class AlertsJSPage(BasePage):
     UNIQUE_ELEMENT_LOC = "//*[@id='page-footer']"
 
@@ -22,10 +23,13 @@ class AlertsJSPage(BasePage):
         self.page_name = "JavaScript Alerts"
 
         self.unique_element = WebElement(self.browser, self.UNIQUE_ELEMENT_LOC, description='JS Alert -> WebElement')
-        self.js_alert_button = Button(self.browser, self.JS_ALERT_BUTTON, description='JS Alert button -> Submit Button')
+        self.js_alert_button = Button(self.browser, self.JS_ALERT_BUTTON,
+                                      description='JS Alert button -> Submit Button')
         self.text_results = WebElement(self.browser, self.RESULT_TEXT, description='JS Alert -> Text Results')
-        self.js_confirm_button = Button(self.browser, self.JS_CONFIRM_BUTTON, description='JS Confirm button -> Submit Button')
-        self.js_prompt_button = Button(self.browser, self.JS_PROMPT_BUTTON, description='JS Prompt button -> Submit Button')
+        self.js_confirm_button = Button(self.browser, self.JS_CONFIRM_BUTTON,
+                                        description='JS Confirm button -> Submit Button')
+        self.js_prompt_button = Button(self.browser, self.JS_PROMPT_BUTTON,
+                                       description='JS Prompt button -> Submit Button')
 
     def js_click_js_alert(self) -> None:
         Logger.info(f"{self.page_name}: click JS Alert button")
@@ -38,12 +42,3 @@ class AlertsJSPage(BasePage):
     def js_click_js_prompt(self) -> None:
         Logger.info(f"{self.page_name}: click JS Prompt button")
         self.js_prompt_button.js_click()
-
-
-
-
-
-
-
-
-

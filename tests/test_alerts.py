@@ -3,13 +3,13 @@ from faker import Faker
 
 faker = Faker()
 
-url = "https://the-internet.herokuapp.com/javascript_alerts"
+URL = "https://the-internet.herokuapp.com/javascript_alerts"
 
 
 def test_javascript_alerts_full_scenario(browser):
     page = AlertsPage(browser)
 
-    browser.get(url)
+    browser.get(URL)
     page.wait_for_open()
 
     page.click_js_alert()

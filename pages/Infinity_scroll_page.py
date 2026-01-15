@@ -18,8 +18,10 @@ class InfinityScrollPage(BasePage):
         self.page_name = 'Infinity scroll page'
 
         self.unique_element = Label(self.browser, self.UNIQUE_ELEMENT_LOC, description='Unique element -> Label')
-        self.paragraphs = MultiWebElement(self.browser, self.PARAGRAPHS, description='Text Paragraph -> MultiWebElement')
-        self.all_paragraph_elem = WebElement(self.browser, self.LOC_ALL_PARAGRAPH,description='Paragraphs elem -> WebElement')
+        self.paragraphs = MultiWebElement(self.browser, self.PARAGRAPHS,
+                                          description='Text Paragraph -> MultiWebElement')
+        self.all_paragraph_elem = WebElement(self.browser, self.LOC_ALL_PARAGRAPH,
+                                             description='Paragraphs elem -> WebElement')
 
     def get_paragraph(self, my_age):
         while True:

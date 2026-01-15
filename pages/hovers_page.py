@@ -23,7 +23,7 @@ class HoversPage(BasePage):
             Logger.info(f"{self}: hover avatar")
             avatar.hover()
         else:
-            Logger.error(f"{self}: Avatar не найден")
+            raise ValueError(f"{self}: Avatar не найден")
 
     def _get_user_name(self, index: int) -> str:
         return WebElement(
@@ -32,13 +32,12 @@ class HoversPage(BasePage):
             f"User name user{index}"
         ).get_text()
 
-    def click_profile_link(self, index: int) -> None:
+    def _click_profile_link(self, index: int) -> None:
         WebElement(
             self.browser,
             self.PROFILE_LINK.format(index + 1),
             f"Profile link user{index}"
         ).wait_for_clickable().click()
-
 
     def hover_and_click_profile(self, index: int) -> str:
         Logger.info(f"{self}: trying to find all users")
@@ -46,5 +45,5 @@ class HoversPage(BasePage):
         avatar = avatars[index]
         self.hover_avatar(avatar)
         user_name = self._get_user_name(index)
-        self.click_profile_link(index)
+        self._click_profile_link(index)
         return user_name

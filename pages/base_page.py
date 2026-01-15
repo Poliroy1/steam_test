@@ -1,6 +1,7 @@
 from browser.browser import Browser
 from logger.logger import Logger
 
+
 class BasePage:
     UNIQUE_ELEMENT_LOC = None
 

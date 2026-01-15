@@ -1,17 +1,17 @@
 from pathlib import Path
 from pages.upload_image_page import UploadImagePage
 
-url = "https://the-internet.herokuapp.com/upload"
-file_name = "Image.png"
+URL = "https://the-internet.herokuapp.com/upload"
+file_name = "Image.PNG"
 
 
 def test_upload_image(browser):
     page = UploadImagePage(browser)
 
-    browser.get(url)
+    browser.get(URL)
     page.wait_for_open()
 
-    file_path = Path(__file__).parent.parent / "resources" / file_name
+    file_path = (Path("resources") / file_name).resolve()
 
     page.upload_file_click(str(file_path))
 
