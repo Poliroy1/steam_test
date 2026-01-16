@@ -34,7 +34,7 @@ class HoversPage(BasePage):
             self.browser,
             self.PROFILE_LINK.format(index + 1),
             f"Profile link user{index}"
-        ).wait_for_clickable().click()
+        ).click()
 
     def hover_and_click_profile(self, index: int) -> str:
         Logger.info(f"{self}: trying to find all users")

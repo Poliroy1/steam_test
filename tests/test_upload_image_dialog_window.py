@@ -16,8 +16,8 @@ def test_upload_image_via_dialog_window(browser):
 
     image_name = page.get_dialog_file_name()
 
-    galochka = page.get_status()
+    status = page.status
 
     assert image_name.is_displayed(), "Имя файла отображается на странице"
 
-    assert galochka.is_displayed(), "Галочка отображается на странице"
+    assert status.is_displayed(), "Галочка отображается на странице"

@@ -28,7 +28,7 @@ class UploadImagePage(BasePage):
         self.file_name = Label(self.browser, self.FILE_NAME, description="Uploaded file name -> Label")
         self.success_text = Label(self.browser, self.SUCCESS_TEXT, description="Success text -> Label")
         self.dialog_window = Label(self.browser, self.DIALOG_WINDOW, description="Dialog window -> Label")
-        self.galochka = Label(self.browser, self.GALOCHKA, description="Galochka -> Label")
+        self.status = Label(self.browser, self.GALOCHKA, description="Galochka -> Label")
         self.dialog_file_name = Label(self.browser, self.DIALOG_FILE_NAME, description="Dialog file name -> Label")
 
     def upload_file_click(self, file_path: str):
@@ -50,10 +50,6 @@ class UploadImagePage(BasePage):
         Logger.info(f"{self}: upload file via dialog window")
         self.dialog_window.click()
         PyAutoGUIUtilities.upload_file(file_path)
-
-    def get_status(self):
-        Logger.info(f"{self}: get galochka")
-        return self.galochka
 
     def get_dialog_file_name(self):
         Logger.info(f"{self}: get dialog file name")
