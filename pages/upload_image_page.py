@@ -15,7 +15,7 @@ class UploadImagePage(BasePage):
     SUCCESS_TEXT = "//h3[text()='File Uploaded!']"
     FILE_NAME = "uploaded-files"
     DIALOG_WINDOW = "drag-drop-upload"
-    GALOCHKA = "//*[@id='drag-drop-upload']//*[contains(@class, 'dz-success-mark')]//span"
+    STATUS = "//*[@id='drag-drop-upload']//*[contains(@class, 'dz-success-mark')]//span"
     DIALOG_FILE_NAME = "//*[contains(@class, 'dz-filename')]//span"
 
     def __init__(self, browser):
@@ -28,7 +28,7 @@ class UploadImagePage(BasePage):
         self.file_name = Label(self.browser, self.FILE_NAME, description="Uploaded file name -> Label")
         self.success_text = Label(self.browser, self.SUCCESS_TEXT, description="Success text -> Label")
         self.dialog_window = Label(self.browser, self.DIALOG_WINDOW, description="Dialog window -> Label")
-        self.status = Label(self.browser, self.GALOCHKA, description="Galochka -> Label")
+        self.status = Label(self.browser, self.STATUS, description="Galochka -> Label")
         self.dialog_file_name = Label(self.browser, self.DIALOG_FILE_NAME, description="Dialog file name -> Label")
 
     def upload_file_click(self, file_path: str):
@@ -50,7 +50,3 @@ class UploadImagePage(BasePage):
         Logger.info(f"{self}: upload file via dialog window")
         self.dialog_window.click()
         PyAutoGUIUtilities.upload_file(file_path)
-
-    def get_dialog_file_name(self):
-        Logger.info(f"{self}: get dialog file name")
-        return self.dialog_file_name

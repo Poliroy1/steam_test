@@ -14,7 +14,7 @@ def test_upload_image_via_dialog_window(browser):
 
     page.upload_file_via_dialog(str(FILE_PATH))
 
-    image_name = page.get_dialog_file_name()
+    image_name = page.dialog_file_name
 
     status = page.status
 
