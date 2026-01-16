@@ -1,0 +1,44 @@
+from faker import Faker
+
+from browser.browser import Browser
+from elements.web_element import WebElement
+from elements.button import Button
+
+from logger.logger import Logger
+from pages.base_page import BasePage
+
+faker = Faker()
+
+
+class AlertsPage(BasePage):
+    UNIQUE_ELEMENT_LOC = "page-footer"
+
+    JS_ALERT_BUTTON = "//button[@onclick='jsAlert()']"
+    JS_CONFIRM_BUTTON = "//button[@onclick='jsConfirm()']"
+    JS_PROMPT_BUTTON = "//button[@onclick='jsPrompt()']"
+    RESULT_TEXT = "result"
+
+    def __init__(self, browser: Browser):
+        super().__init__(browser)
+        self.page_name = "JavaScript Alerts"
+
+        self.unique_element = WebElement(self.browser, self.UNIQUE_ELEMENT_LOC, description='JS Alert -> WebElement')
+        self.js_alert_button = Button(self.browser, self.JS_ALERT_BUTTON,
+                                      description='JS Alert button -> Submit Button')
+        self.text_results = WebElement(self.browser, self.RESULT_TEXT, description='JS Alert -> Text Results')
+        self.js_confirm_button = Button(self.browser, self.JS_CONFIRM_BUTTON,
+                                        description='JS Confirm button -> Submit Button')
+        self.js_prompt_button = Button(self.browser, self.JS_PROMPT_BUTTON,
+                                       description='JS Prompt button -> Submit Button')
+
+    def click_js_alert(self) -> None:
+        Logger.info(f"{self.page_name}: click JS Alert button")
+        self.js_alert_button.click()
+
+    def click_js_confirm(self) -> None:
+        Logger.info(f"{self.page_name}: click JS Confirm button")
+        self.js_confirm_button.click()
+
+    def click_js_prompt(self) -> None:
+        Logger.info(f"{self.page_name}: click JS Prompt button")
+        self.js_prompt_button.click()
