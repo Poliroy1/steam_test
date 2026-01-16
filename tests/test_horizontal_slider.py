@@ -12,11 +12,9 @@ def test_horizontal_slider(browser):
     page.wait_for_open()
 
     min_v, max_v, step = page.get_slider_bounds()
-
     num_steps = int((max_v - min_v) / step) - 1
 
     rand_step = random.randrange(1, num_steps + 1)
-
     target_value = min_v + rand_step * step
 
     page.set_slider_value(target_value)

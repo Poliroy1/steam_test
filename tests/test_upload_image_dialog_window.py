@@ -2,7 +2,8 @@ from pathlib import Path
 from pages.upload_image_page import UploadImagePage
 
 URL = "https://the-internet.herokuapp.com/upload"
-file_name = "Image.PNG"
+FILE_NAME = "Image.PNG"
+FILE_PATH = (Path("resources") / FILE_NAME).resolve()
 
 
 def test_upload_image_via_dialog_window(browser):
@@ -11,14 +12,12 @@ def test_upload_image_via_dialog_window(browser):
     browser.get(URL)
     page.wait_for_open()
 
-    file_path = (Path("resources") / file_name).resolve()
-
-    page.upload_file_via_dialog(str(file_path))
+    page.upload_file_via_dialog(str(FILE_PATH))
 
     image_name = page.get_dialog_file_name()
 
-    galochka = page.get_galochka()
+    galochka = page.get_status()
 
-    assert image_name.is_displayed(), f"Имя файла отображается на странице"
+    assert image_name.is_displayed(), "Имя файла отображается на странице"
 
-    assert galochka.is_displayed(), f"Галочка отображается на странице"
+    assert galochka.is_displayed(), "Галочка отображается на странице"

@@ -2,7 +2,8 @@ from pathlib import Path
 from pages.upload_image_page import UploadImagePage
 
 URL = "https://the-internet.herokuapp.com/upload"
-file_name = "Image.PNG"
+FILE_NAME = "Image.PNG"
+FILE_PATH = (Path("resources") / FILE_NAME).resolve()
 
 
 def test_upload_image(browser):
@@ -11,14 +12,12 @@ def test_upload_image(browser):
     browser.get(URL)
     page.wait_for_open()
 
-    file_path = (Path("resources") / file_name).resolve()
-
-    page.upload_file_click(str(file_path))
+    page.upload_file_click(str(FILE_PATH))
 
     actual_rs = page.get_upload_text()
     expected_rs = "File Uploaded!"
     assert expected_rs == actual_rs, f"Ожидали имя на странице: {expected_rs}, получили: {actual_rs}"
 
-    expected_file_name = file_name
+    expected_file_name = FILE_NAME
     assert page.get_file_name() == expected_file_name, \
         f"Ожидалось имя файла '{expected_file_name}', отображается '{page.get_file_name()}'"

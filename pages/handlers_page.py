@@ -7,7 +7,7 @@ from pages.base_page import BasePage
 class HandlersPage(BasePage):
     UNIQUE_ELEMENT_LOC = "//*[@id='content']//*[contains(text(), 'Opening a new window')]"
     LINK = "//*[@id='content']//*[@target='_blank']"
-    HEADER = "//*[@class='example']//*[contains(text(), 'New Window')]"
+    HEADER = "//*[contains(@class,'example')]//*[contains(text(), 'New Window')]"
 
     def __init__(self, browser: Browser):
         super().__init__(browser)

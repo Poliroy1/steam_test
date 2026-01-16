@@ -19,11 +19,8 @@ class HoversPage(BasePage):
         self.avatars = MultiWebElement(self.browser, self.AVATARS, description="User avatars")
 
     def hover_avatar(self, avatar: WebElement) -> None:
-        if avatar.is_exists():
-            Logger.info(f"{self}: hover avatar")
-            avatar.hover()
-        else:
-            raise ValueError(f"{self}: Avatar не найден")
+        Logger.info(f"{self}: hover avatar")
+        avatar.hover()
 
     def _get_user_name(self, index: int) -> str:
         return WebElement(

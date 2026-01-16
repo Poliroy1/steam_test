@@ -18,15 +18,6 @@ class SliderElement(Input):
     def get_current_value(self) -> float:
         return float(self.get_attribute("value"))
 
-    def _send_keys(self, keys: str):
-        element = self.wait_for_visible()
-        Logger.info(f"{self}: send keys = '{repr(keys)}'")
-        try:
-            element.send_keys(keys)
-        except WebDriverException as err:
-            Logger.error(f"{self}: {err}")
-            raise
-
     def set_value(self, target_value: float):
         Logger.info(f"Setting slider to value {target_value}")
 
@@ -44,5 +35,5 @@ class SliderElement(Input):
         key = Keys.ARROW_RIGHT if steps > 0 else Keys.ARROW_LEFT
 
         self.click()
-        self._send_keys(Keys.HOME)
-        self._send_keys(key * steps)
+        self.send_keys(Keys.HOME, clear=False)
+        self.send_keys(key * steps, clear=False)

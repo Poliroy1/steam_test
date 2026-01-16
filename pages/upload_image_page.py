@@ -51,7 +51,7 @@ class UploadImagePage(BasePage):
         self.dialog_window.click()
         PyAutoGUIUtilities.upload_file(file_path)
 
-    def get_galochka(self):
+    def get_status(self):
         Logger.info(f"{self}: get galochka")
         return self.galochka
 

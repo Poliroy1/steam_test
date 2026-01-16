@@ -17,15 +17,18 @@ def test_iframe(browser):
 
     actual_rs = page.get_unique_text_nested_frames()
     expected_rs = TEXT_NESTED_FRAMES
-    assert actual_rs == expected_rs, f" Nested text: ожидался текст {expected_rs}, фактический — '{actual_rs}'"
+    assert actual_rs == expected_rs, (f" Nested text: ожидался текст {expected_rs}, "
+                                      f"Фактический — '{actual_rs}'")
 
     actual_rs = page.get_child_text()
     expected_rs = 'Child Iframe'
-    assert expected_rs == actual_rs, f"Child iframe: ожидался текст {expected_rs}, фактический — '{actual_rs}'"
+    assert expected_rs == actual_rs, (f"Child iframe: ожидался текст {expected_rs}, "
+                                      f"Фактический — '{actual_rs}'")
 
     actual_rs = page.get_parent_text()
     expected_rs = 'Parent frame'
-    assert expected_rs == actual_rs, f"Parent iframe: ожидался текст {expected_rs},фактический — '{actual_rs}'"
+    assert expected_rs == actual_rs, (f"Parent iframe: ожидался текст {expected_rs},"
+                                      f"Фактический — '{actual_rs}'")
 
     page.click_frames()
     page.wait_for_open()

@@ -15,6 +15,7 @@ def test_alerts_context_click(browser):
 
     expected = "You selected a context menu"
 
-    assert expected == alert_text, f"Context click: Ожидался текст {expected} в алерте. Фактический текст: {alert_text}"
+    assert expected == alert_text, (f"Context click: Ожидался текст {expected} в алерте. "
+                                    f"Фактический текст: {alert_text}")
 
     page.browser.accept_alert()
