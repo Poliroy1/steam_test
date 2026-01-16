@@ -50,3 +50,11 @@ class UploadImagePage(BasePage):
         Logger.info(f"{self}: upload file via dialog window")
         self.dialog_window.click()
         PyAutoGUIUtilities.upload_file(file_path)
+
+    def has_dialog_file_name(self) -> bool:
+        Logger.info(f"{self}: check dialog file name")
+        return self.dialog_file_name.is_displayed()
+
+    def has_success_status(self) -> bool:
+        Logger.info(f"{self}: check upload success status")
+        return self.status.is_displayed()

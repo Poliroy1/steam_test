@@ -18,6 +18,5 @@ def test_upload_image(browser):
     expected_rs = "File Uploaded!"
     assert expected_rs == actual_rs, f"Ожидали имя на странице: {expected_rs}, получили: {actual_rs}"
 
-    expected_file_name = FILE_NAME
-    assert page.get_file_name() == expected_file_name, \
-        f"Ожидалось имя файла '{expected_file_name}', отображается '{page.get_file_name()}'"
+    assert page.get_file_name() == FILE_NAME, \
+        f"Ожидалось имя файла '{FILE_NAME}', отображается '{page.get_file_name()}'"
