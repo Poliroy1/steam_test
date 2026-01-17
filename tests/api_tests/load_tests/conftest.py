@@ -1,5 +1,6 @@
 import pytest
+import random
 
 @pytest.fixture
 def api_fixture():
-    return None
+    return random.randint(1, 100)
