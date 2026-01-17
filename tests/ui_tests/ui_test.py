@@ -4,5 +4,5 @@ import pytest
 def common_fixture():
     return 100
 
-def ui_test(common_fixture):
+def ui_test(ui_fixture, common_fixture):
     pass
