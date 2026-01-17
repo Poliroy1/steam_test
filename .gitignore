@@ -205,3 +205,35 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# Python
+__pycache__/
+*.py[cod]
+
+# pytest
+.pytest_cache/
+
+# Virtual env
+venv/
+.env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reports
+allure-results/
+allure-report/
+reports/
+
+# Logs
+*.log
+logs/
+
+# UI test artifacts
+screenshots/
+videos/
