@@ -21,8 +21,3 @@ class TestGroupContract:
         assert response.status_code == requests.status_codes.codes.created, \
             (f"Wrong status code. Actual: '{response.status_code}', but expected: "
              f"{requests.status_codes.codes.authorized}")
-
-
-
-
-

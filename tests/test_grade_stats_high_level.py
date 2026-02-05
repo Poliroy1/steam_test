@@ -2,62 +2,64 @@ import random
 import requests
 
 from services.university.models.base_grade import BaseGrade
+from services.university.models.grade_static_response import GradeStatisticResponse
 from services.university.university_service import UniversityService
 from services.university.helpers.grade_helper import GradeHelper
 from services.university.models.grade_request import GradeRequest
 
 
-class TestGradingBusinessFlow:
-    def test_teacher_sets_grade_to_student(self,
-        university_api_utils_admin,
-        create_group,
-        create_student,
-        create_teacher
+class TestGradeStatsHighLevel:
+    def test_stats_min_max_avg_calculated_correctly(
+            self,
+            university_api_utils_admin,
+            create_student,
+            create_teacher,
     ):
         service = UniversityService(api_utils=university_api_utils_admin)
 
-        student = create_student
-        teacher = create_teacher
-
-        grade_value = random.randint(
+        values = [
             BaseGrade.MIN_GRADE,
+            BaseGrade.MIN_GRADE + 1,
             BaseGrade.MAX_GRADE
+        ]
+
+        for v in values:
+            service.create_grade(GradeRequest(
+                teacher_id=create_teacher.id,
+                student_id=create_student.id,
+                grade=v
+            ))
+
+        resp = GradeHelper(api_utils=university_api_utils_admin).get_grade_stats(
+            student_id=create_student.id,
+            teacher_id=create_teacher.id,
+            group_id=create_student.group_id
         )
 
-        created_grade = service.create_grade(GradeRequest(
-            teacher_id=teacher.id,
-            student_id=student.id,
-            grade=grade_value
-        ))
-
-        stats_resp = GradeHelper(api_utils=university_api_utils_admin).get_grade_stats(
-            student_id=student.id,
-            teacher_id=teacher.id,
-            group_id=student.group_id
+        assert resp.status_code == requests.status_codes.codes.ok, (
+            f"Wrong status code. Actual: '{resp.status_code}', "
+            f"Expected: '{requests.status_codes.codes.ok}'"
         )
 
-        stats = stats_resp.json()
+        stats = GradeStatisticResponse.model_validate(resp.json())
 
-        assert created_grade.grade == grade_value, \
-            (f"Wrong grade value. Actual: '{created_grade.grade}', "
-             f"Expected: '{grade_value}'")
+        assert stats.count == len(values), (
+            f"Wrong count. Actual: '{stats.count}', "
+            f"Expected: '{len(values)}'"
+        )
 
-        assert stats_resp.status_code == requests.status_codes.codes.ok, \
-            (f"Wrong status code. Actual: '{stats_resp.status_code}', "
-             f"Expected: '{requests.status_codes.codes.ok}'")
+        assert stats.min == min(values), (
+            f"Wrong min grade. Actual: '{stats.min}', "
+            f"Expected: '{min(values)}'"
+        )
 
-        assert stats["count"] == 1, \
-            (f"Wrong count. Actual: '{stats['count']}', "
-             f"Expected: '1'")
+        assert stats.max == max(values), (
+            f"Wrong max grade. Actual: '{stats.max}', "
+            f"Expected: '{max(values)}'"
+        )
 
-        assert stats["min"] == grade_value, \
-            (f"Wrong min grade. Actual: '{stats['min']}', "
-             f"Expected: '{grade_value}'")
-
-        assert stats["max"] == grade_value, \
-            (f"Wrong max grade. Actual: '{stats['max']}', "
-             f"Expected: '{grade_value}'")
-
-        assert stats["avg"] == grade_value, \
-            (f"Wrong avg grade. Actual: '{stats['avg']}', "
-             f"Expected: '{grade_value}'")
+        expected_avg = sum(values) / len(values)
+        assert stats.avg == expected_avg, (
+            f"Wrong avg grade. Actual: '{stats.avg}', "
+            f"Expected: '{expected_avg}'"
+        )

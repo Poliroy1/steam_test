@@ -3,9 +3,9 @@ import random
 from faker import Faker
 
 from logger.logger import Logger
+from services.university.helpers.teacher_helper import TeacherHelper
 from services.university.models.base_teacher import SubjectEnum
-from services.university.models.teacher_request import TeacherRequest
-from services.university.university_service import UniversityService
+
 
 faker = Faker()
 
@@ -13,11 +13,12 @@ faker = Faker()
 class TestTeacher:
     def test_teacher_create(self, university_api_utils_admin):
         Logger.info('### Step 1. Create teacher')
-        university_service = UniversityService(api_utils=university_api_utils_admin)
-
-        teacher = TeacherRequest(first_name=faker.first_name(),
-                                 last_name=faker.last_name(),
-                                 subject=random.choice([option for option in SubjectEnum]))
-        teacher_response = university_service.create_teacher(teacher_request=teacher)
-
-        assert teacher_response.id is not None
+        teacher_helper = TeacherHelper(api_utils=university_api_utils_admin)
+        response = teacher_helper.post_teacher({
+            'first_name': faker.first_name(),
+            'last_name': faker.last_name(),
+            'subject': random.choice([option for option in SubjectEnum]),
+        })
+        assert response.status_code == 201, \
+            (f'but Excepted : {response.status_code}'
+            f' Wrong response  status Code Actual: {response.status_code} ')

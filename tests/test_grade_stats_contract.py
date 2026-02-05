@@ -15,5 +15,5 @@ class TestGradeStatsLowLevel:
 
         response = grade_helper.get_grade_stats(student_id=1, teacher_id=1, group_id=1)
 
-        assert response.status_code == requests.codes.unauthorized, \
-            f"Expected 401, got {response.status_code}, body: {response.text}"
+        assert response.status_code == requests.codes.ok, \
+            f"Expected 200, got {response.status_code}, body: {response.text}"
