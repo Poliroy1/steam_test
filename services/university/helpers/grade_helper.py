@@ -11,23 +11,19 @@ class GradeHelper(BaseHelper):
         response = self.api_utils.post(self.ROOT_ENDPOINT, data=data)
         return response
 
-    def get_grade(self, student_id: int | None = None,
-                  teacher_id: int | None = None,
-                  group_id: int | None = None,) -> requests.Response:
-        params = {
-            "student_id": student_id,
-            "teacher_id": teacher_id,
-            "group_id": group_id,
-        }
-        return self.api_utils.get(self.ROOT_ENDPOINT, params=params)
+    def get_grade(self, json: dict) -> requests.Response:
+        return self.api_utils.get(self.ROOT_ENDPOINT, json=json)
 
-    def get_grade_stats(self, student_id: int | None = None,
-                        teacher_id: int | None = None,
-                        group_id: int | None = None) -> requests.Response:
-        params = {
-            "student_id": student_id,
-            "teacher_id": teacher_id,
-            "group_id": group_id,
-        }
+    def get_grade_stats(self,
+                    student_id: int = None,
+                    teacher_id: int = None,
+                    group_id: int = None) -> requests.Response:
+        params = {}
+        if student_id is not None:
+            params['student_id'] = student_id
+        if teacher_id is not None:
+            params['teacher_id'] = teacher_id
+        if group_id is not None:
+            params['group_id'] = group_id
         response = self.api_utils.get(self.ENDPOINT_STATS, params=params)
         return response

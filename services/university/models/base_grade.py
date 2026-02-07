@@ -1,11 +1,10 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import ClassVar
 
+MIN_GRADE = 1
+MAX_GRADE = 5
 
 class BaseGrade(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    MIN_GRADE: ClassVar[int] = 1
-    MAX_GRADE: ClassVar[int] = 5
 
     teacher_id: int
     student_id: int

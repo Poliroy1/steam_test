@@ -1,5 +1,7 @@
 import random
 import time
+from uuid import uuid4
+
 import pytest
 import requests
 from services.auth.auth_service import AuthService
@@ -13,6 +15,7 @@ from services.university.models.group_request import GroupRequest
 from services.university.models.student_request import StudentRequest
 from services.university.models.teacher_request import TeacherRequest
 from services.university.university_service import UniversityService
+from services.university.models.base_grade import MIN_GRADE, MAX_GRADE
 from utils.api_utils import ApiUtils
 from faker import Faker
 
@@ -97,6 +100,16 @@ def create_teacher(university_api_utils_admin):
     teacher_response = university_service.create_teacher(teacher)
     return teacher_response
 
+@pytest.fixture(scope="function")
+def create_grade(university_api_utils_admin, create_teacher, create_student):
+    university_service = UniversityService(api_utils=university_api_utils_admin)
+    grade = GradeRequest(
+        teacher_id=create_teacher.id,
+        student_id=create_student.id,
+        grade=random.randint(MIN_GRADE, MAX_GRADE))
+
+    grade_response = university_service.create_grade(grade_request=grade)
+    return grade_response
 
 @pytest.fixture
 def student_payload(create_group):
@@ -109,42 +122,58 @@ def student_payload(create_group):
         group_id=create_group.id
     )
 
-@pytest.fixture(scope="function", autouse=False)
-def create_second_teacher(university_api_utils_admin):
-    university_service = UniversityService(api_utils=university_api_utils_admin)
-    teacher = TeacherRequest(
-        first_name=faker.first_name(),
-        last_name=faker.last_name(),
-        subject=random.choice([option for option in SubjectEnum]),
-    )
-    return university_service.create_teacher(teacher)
+@pytest.fixture
+def university_service(university_api_utils_admin):
+    return UniversityService(api_utils=university_api_utils_admin)
+
 
 @pytest.fixture
-def dataset_two_teachers_grades(university_api_utils_admin, create_student, create_teacher, create_second_teacher):
-    service = UniversityService(api_utils=university_api_utils_admin)
+def group_factory(university_service):
+    def _create(name: str | None = None):
+        base = (name or faker.word()).strip()
+        unique_name = f"{base}_{uuid4().hex[:8]}"
 
-    teacher_1_values = [BaseGrade.MIN_GRADE, BaseGrade.MAX_GRADE]
-    teacher_2_values = [BaseGrade.MIN_GRADE + 1]
+        req = GroupRequest(name=unique_name)
+        return university_service.create_group(req)
 
-    for v in teacher_1_values:
-        service.create_grade(GradeRequest(
-            teacher_id=create_teacher.id,
-            student_id=create_student.id,
-            grade=v
-        ))
+    return _create
 
-    for v in teacher_2_values:
-        service.create_grade(GradeRequest(
-            teacher_id=create_second_teacher.id,
-            student_id=create_student.id,
-            grade=v
-        ))
 
-    return {
-        "student_id": create_student.id,
-        "group_id": create_student.group_id,
-        "teacher_1_id": create_teacher.id,
-        "teacher_1_values": teacher_1_values,
-        "teacher_2_id": create_second_teacher.id,
-        "teacher_2_values": teacher_2_values,
-    }
+@pytest.fixture
+def student_factory(university_service):
+    def _create(group_id: int, **overrides):
+        req = StudentRequest(
+            first_name=overrides.get("first_name", faker.first_name()),
+            last_name=overrides.get("last_name", faker.last_name()),
+            degree=overrides.get("degree", random.choice([o for o in DegreeEnum])),
+            phone=overrides.get("phone", faker.numerify("+7##########")),
+            email=overrides.get("email", faker.email()),
+            group_id=group_id,
+        )
+        return university_service.create_student(req)
+    return _create
+
+
+@pytest.fixture
+def teacher_factory(university_service):
+    def _create(**overrides):
+        req = TeacherRequest(
+            first_name=overrides.get("first_name", faker.first_name()),
+            last_name=overrides.get("last_name", faker.last_name()),
+            subject=overrides.get("subject", random.choice([o for o in SubjectEnum])),
+        )
+        return university_service.create_teacher(req)
+    return _create
+
+
+@pytest.fixture
+def grade_factory(university_service):
+    def _create(teacher_id: int, student_id: int, grade: int | None = None):
+        if grade is None:
+            grade = random.randint(MIN_GRADE, MAX_GRADE)
+
+        req = GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=grade)
+        return university_service.create_grade(req)
+
+    return _create
+
