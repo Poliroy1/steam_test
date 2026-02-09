@@ -1,9 +1,11 @@
+import random
+
 from services.general.base_service import BaseService
 from services.university.helpers.grade_helper import GradeHelper
 from services.university.helpers.group_helper import GroupHelper
 from services.university.helpers.student_helper import StudentHelper
 from services.university.helpers.teacher_helper import TeacherHelper
-from services.university.models.base_grade import BaseGrade
+from services.university.models.base_grade import BaseGrade, MIN_GRADE, MAX_GRADE
 from services.university.models.grade_request import GradeRequest
 from services.university.models.grade_response import GradeResponse
 from services.university.models.grade_static_response import GradeStatisticResponse
@@ -61,3 +63,7 @@ class UniversityService(BaseService):
             group_id=group_id
         )
         return GradeStatisticResponse(**response.json())
+
+    def create_random_grade(self, teacher_id: int, student_id: int):
+        value = random.randint(MIN_GRADE, MAX_GRADE)
+        return self.create_grade(GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=value))

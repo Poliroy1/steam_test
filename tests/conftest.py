@@ -126,54 +126,64 @@ def student_payload(create_group):
 def university_service(university_api_utils_admin):
     return UniversityService(api_utils=university_api_utils_admin)
 
-
 @pytest.fixture
-def group_factory(university_service):
-    def _create(name: str | None = None):
-        base = (name or faker.word()).strip()
-        unique_name = f"{base}_{uuid4().hex[:8]}"
+def grade_stats_dataset(university_service):
+    group_a = university_service.create_group(GroupRequest(name=f"group_a_{uuid4().hex[:8]}"))
+    group_b = university_service.create_group(GroupRequest(name=f"group_b_{uuid4().hex[:8]}"))
 
-        req = GroupRequest(name=unique_name)
-        return university_service.create_group(req)
+    student_a1 = university_service.create_student(StudentRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        degree=random.choice([o for o in DegreeEnum]),
+        phone=faker.numerify("+7##########"),
+        email=faker.email(),
+        group_id=group_a.id,
+    ))
+    student_a2 = university_service.create_student(StudentRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        degree=random.choice([o for o in DegreeEnum]),
+        phone=faker.numerify("+7##########"),
+        email=faker.email(),
+        group_id=group_a.id,
+    ))
+    student_b1 = university_service.create_student(StudentRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        degree=random.choice([o for o in DegreeEnum]),
+        phone=faker.numerify("+7##########"),
+        email=faker.email(),
+        group_id=group_b.id,
+    ))
 
-    return _create
+    teacher_main = university_service.create_teacher(TeacherRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        subject=random.choice([o for o in SubjectEnum]),
+    ))
+    teacher_other = university_service.create_teacher(TeacherRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        subject=random.choice([o for o in SubjectEnum]),
+    ))
 
+    grade_a = university_service.create_random_grade(teacher_main.id, student_a1.id).grade
+    grade_b = university_service.create_random_grade(teacher_main.id, student_a1.id).grade
+    grade_c = university_service.create_random_grade(teacher_main.id, student_a2.id).grade
 
-@pytest.fixture
-def student_factory(university_service):
-    def _create(group_id: int, **overrides):
-        req = StudentRequest(
-            first_name=overrides.get("first_name", faker.first_name()),
-            last_name=overrides.get("last_name", faker.last_name()),
-            degree=overrides.get("degree", random.choice([o for o in DegreeEnum])),
-            phone=overrides.get("phone", faker.numerify("+7##########")),
-            email=overrides.get("email", faker.email()),
-            group_id=group_id,
-        )
-        return university_service.create_student(req)
-    return _create
+    _unrelated_grade = university_service.create_random_grade(teacher_other.id, student_b1.id).grade
 
+    expected_by_student_a1 = [grade_a, grade_b]
+    expected_by_teacher_main = [grade_a, grade_b, grade_c]
+    expected_by_group_a = [grade_a, grade_b, grade_c]
 
-@pytest.fixture
-def teacher_factory(university_service):
-    def _create(**overrides):
-        req = TeacherRequest(
-            first_name=overrides.get("first_name", faker.first_name()),
-            last_name=overrides.get("last_name", faker.last_name()),
-            subject=overrides.get("subject", random.choice([o for o in SubjectEnum])),
-        )
-        return university_service.create_teacher(req)
-    return _create
-
-
-@pytest.fixture
-def grade_factory(university_service):
-    def _create(teacher_id: int, student_id: int, grade: int | None = None):
-        if grade is None:
-            grade = random.randint(MIN_GRADE, MAX_GRADE)
-
-        req = GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=grade)
-        return university_service.create_grade(req)
-
-    return _create
-
+    return {
+        "groups": {"a": group_a, "b": group_b},
+        "students": {"a1": student_a1, "a2": student_a2, "b1": student_b1},
+        "teachers": {"main": teacher_main, "other": teacher_other},
+        "expected": {
+            "by_student_a1": expected_by_student_a1,
+            "by_teacher_main": expected_by_teacher_main,
+            "by_group_a": expected_by_group_a,
+        },
+    }

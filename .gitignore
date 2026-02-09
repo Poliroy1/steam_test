@@ -208,3 +208,6 @@ __marimo__/
 # IDE
 .idea/
 .vscode/
+# test logs
+tests/logs/
+*.log.*
