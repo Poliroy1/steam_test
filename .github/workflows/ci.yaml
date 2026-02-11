@@ -56,11 +56,33 @@ jobs:
       - name: Docker compose up
         run: docker compose up -d
 
-      # ✅ ДОБАВИЛ: ждём, пока сервисы реально начнут принимать запросы
       - name: Wait for services readiness
+        shell: bash
         run: |
-          curl --retry 60 --retry-delay 2 --retry-connrefused http://127.0.0.1:8000/docs
-          curl --retry 60 --retry-delay 2 --retry-connrefused http://127.0.0.1:8001/docs
+          set -e
+          
+          wait_url () {
+            local url="$1"
+            local name="$2"
+            echo "Waiting for $name at $url ..."
+          
+            for i in {1..90}; do
+              # -f: fail on 4xx/5xx
+              # --max-time: не висим долго
+              if curl -fsS --max-time 2 "$url" >/dev/null; then
+                echo "$name is ready ✅"
+                return 0
+              fi
+              echo "  not ready yet ($i/90) ..."
+              sleep 2
+            done
+          
+            echo "$name was not ready in time ❌"
+            return 1
+          }
+          
+          wait_url "http://127.0.0.1:8000/docs" "auth"
+          wait_url "http://127.0.0.1:8001/docs" "university"
 
       - name: Run tests
         run: |
