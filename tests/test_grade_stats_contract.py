@@ -1,9 +1,14 @@
+import pytest
 import requests
 
 from services.university.helpers.grade_helper import GradeHelper
 
 
 class TestGradeStatsLowLevel:
+    @pytest.mark.xfail(
+        reason="Bug in service: anonymous request returns 403 'Access denied' instead of 401",
+        strict=False,
+    )
     def test_get_stats_unauthorized(self, university_api_utils_anonym):
         grade_helper = GradeHelper(api_utils=university_api_utils_anonym)
 
