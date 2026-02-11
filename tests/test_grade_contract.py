@@ -1,9 +1,9 @@
 import random
 
 from faker import Faker
-from services.university.models.base_grade import MAX_GRADE, MIN_GRADE
+
 from services.university.helpers.grade_helper import GradeHelper
-from services.university.models.grade_request import GradeRequest
+from services.university.models.base_grade import MAX_GRADE, MIN_GRADE
 
 faker = Faker()
 
