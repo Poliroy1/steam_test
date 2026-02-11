@@ -50,7 +50,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create .env for docker-compose
+      - name: Create .env from GitHub vars/secrets
         run: |
           cat > .env << 'EOF'
           POSTGRES_USER=${{ vars.POSTGRES_USER }}
