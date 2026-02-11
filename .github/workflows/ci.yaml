@@ -2,13 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -18,77 +22,76 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python (for Ruff)
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
 
-      - name: Install Ruff
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
+          # если у тебя requirements.txt — оставь так:
+          pip install -r requirements.txt
 
-      - name: Ruff lint
+      - name: Ruff (lint)
         run: |
           ruff check .
+          ruff format --check .
 
-      - name: Build tests image
+      # ✅ ДОБАВИЛ: создаём .env, чтобы docker-compose увидел переменные
+      - name: Create .env for docker-compose
         run: |
-          docker build -t autotests:latest .
+          cat > .env << 'EOF'
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=1234
+          POSTGRES_DB_AUTH=auth
+          POSTGRES_DB_UNIVERSITY=university
+          AUTH_SERVICE_INTERNAL_URL=http://auth:8000
+          AUTH_SERVICE_API_URL=http://127.0.0.1:8000
+          UNIVERSITY_SERVICE_INTERNAL_URL=http://university:8000
+          UNIVERSITY_SERVICE_API_URL=http://127.0.0.1:8001
+          EOF
 
-      - name: Start system (docker compose)
+      - name: Docker compose up
+        run: docker compose up -d
+
+      # ✅ ДОБАВИЛ: ждём, пока сервисы реально начнут принимать запросы
+      - name: Wait for services readiness
         run: |
-          docker compose up -d
+          curl --retry 60 --retry-delay 2 --retry-connrefused http://127.0.0.1:8000/docs
+          curl --retry 60 --retry-delay 2 --retry-connrefused http://127.0.0.1:8001/docs
 
-      - name: Run tests in Docker (compose network)
+      - name: Run tests
         run: |
-          NET=$(docker network ls --format '{{.Name}}' | grep '_default$' | head -n 1)
-          echo "Using compose network: $NET"
+          pytest -q --alluredir=allure-results
 
-          rm -rf allure-results allure-report || true
-          mkdir -p allure-results
+      - name: Docker compose down
+        if: always()
+        run: docker compose down -v
 
-          docker run --rm \
-            --network "$NET" \
-            -e AUTH_URL="http://auth:8000" \
-            -e UNIVERSITY_URL="http://university:8000" \
-            -v "$PWD/allure-results:/app/allure-results" \
-            autotests:latest \
-            pytest -q --alluredir=/app/allure-results
-
-      - name: Generate Allure report
+      # ✅ ДОБАВИЛ: делаем Allure HTML (чтобы можно было задеплоить на Pages)
+      - name: Build Allure report
+        if: always()
         run: |
-          docker run --rm \
-            -v "$PWD/allure-results:/app/allure-results" \
-            -v "$PWD/allure-report:/app/allure-report" \
-            autotests:latest \
-            allure generate /app/allure-results -o /app/allure-report --clean
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          curl -fsSL -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+          tar -xzf allure.tgz
+          ./allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
 
-      - name: Upload Allure report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-  deploy-pages:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Download Allure report artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
+      # ✅ ДОБАВИЛ: упаковываем папку для Pages
       - name: Upload Pages artifact
+        if: always()
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report
 
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' # ✅ ДОБАВИЛ: деплой только из main
+
+    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
