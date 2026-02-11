@@ -187,3 +187,34 @@ def grade_stats_dataset(university_service):
             "by_group_a": expected_by_group_a,
         },
     }
+
+@pytest.fixture(scope="session", autouse=True)
+def auth_service_readiness():
+    timeout = 180
+    start_time = time.time()
+    while time.time() < start_time + timeout:
+        try:
+            response = requests.get(AuthService.SERVICE_URL + "/docs")
+            response.raise_for_status()
+        except requests.exceptions.ConnectionError:
+            time.sleep(1)
+        else:
+            break
+    else:
+        raise RuntimeError(f"Auth service wasn't started during '{timeout}' seconds.' ")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def university_service_readiness():
+    timeout = 180
+    start_time = time.time()
+    while time.time() < start_time + timeout:
+        try:
+            response = requests.get(UniversityService.SERVICE_URL + "/docs")
+            response.raise_for_status()
+        except requests.exceptions.ConnectionError:
+            time.sleep(1)
+        else:
+            break
+    else:
+        raise RuntimeError(f"Auth service wasn't started during '{timeout}' seconds.' ")

@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python (for Ruff)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Ruff
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+
+      - name: Ruff lint
+        run: |
+          ruff check .
+
+      - name: Build tests image
+        run: |
+          docker build -f Dockerfile.tests -t autotests:latest .
+
+      - name: Start system (docker compose)
+        run: |
+          docker compose up -d
+
+      - name: Run tests in Docker (compose network)
+        run: |
+          NET=$(docker network ls --format '{{.Name}}' | grep '_default$' | head -n 1)
+          echo "Using compose network: $NET"
+
+          rm -rf allure-results allure-report || true
+          mkdir -p allure-results
+
+          docker run --rm \
+            --network "$NET" \
+            -e AUTH_URL="http://auth:8000" \
+            -e UNIVERSITY_URL="http://university:8000" \
+            -v "$PWD/allure-results:/app/allure-results" \
+            autotests:latest \
+            pytest -q --alluredir=/app/allure-results
+
+      - name: Generate Allure report
+        run: |
+          docker run --rm \
+            -v "$PWD/allure-results:/app/allure-results" \
+            -v "$PWD/allure-report:/app/allure-report" \
+            autotests:latest \
+            allure generate /app/allure-results -o /app/allure-report --clean
+
+      - name: Upload Allure report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+
+  deploy-pages:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Download Allure report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

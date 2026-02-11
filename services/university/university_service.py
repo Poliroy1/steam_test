@@ -1,3 +1,4 @@
+import os
 import random
 
 from services.general.base_service import BaseService
@@ -22,7 +23,7 @@ faker = Faker()
 
 
 class UniversityService(BaseService):
-    SERVICE_URL = "http://localhost:8001"
+    SERVICE_URL = os.getenv("UNIVERSITY_URL", "http://localhost:8001")
 
     def __init__(self, api_utils: ApiUtils):
         super().__init__(api_utils)
@@ -64,6 +65,8 @@ class UniversityService(BaseService):
         )
         return GradeStatisticResponse(**response.json())
 
-    def create_random_grade(self, teacher_id: int, student_id: int):
+    def create_random_grade(self, teacher_id: int, student_id: int) -> GradeResponse:
         value = random.randint(MIN_GRADE, MAX_GRADE)
-        return self.create_grade(GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=value))
+        return self.create_grade(
+            GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=value)
+        )
