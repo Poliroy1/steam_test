@@ -17,8 +17,7 @@ class TestGroupContract:
         response = group_helper.post_group({"name": faker.name()})
 
         assert response.status_code == requests.codes.unauthorized, (
-            f"Wrong status code. Actual: '{response.status_code}', but expected: "
-            f"{requests.codes.unauthorized}"
+            f"Wrong status code. Actual: '{response.status_code}', but expected: {requests.codes.unauthorized}"
         )
 
     def test_create_group_admin(self, university_api_utils_admin):
@@ -26,6 +25,5 @@ class TestGroupContract:
         response = group_helper.post_group({"name": faker.name()})
 
         assert response.status_code == requests.codes.created, (
-            f"Wrong status code. Actual: '{response.status_code}', but expected: "
-            f"{requests.codes.authorized}"
+            f"Wrong status code. Actual: '{response.status_code}', but expected: {requests.codes.authorized}"
         )

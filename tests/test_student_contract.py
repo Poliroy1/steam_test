@@ -13,6 +13,5 @@ class TestStudentContract:
         response = student_helper.post_student(json=student_payload.model_dump())
 
         assert response.status_code == requests.codes.unauthorized, (
-            f"Wrong status code. Actual: '{response.status_code}', but expected: "
-            f"{requests.codes.authorized}"
+            f"Wrong status code. Actual: '{response.status_code}', but expected: {requests.codes.authorized}"
         )
