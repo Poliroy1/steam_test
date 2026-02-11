@@ -1,4 +1,5 @@
 import pytest
+
 from logger.logger import Logger
 
 
@@ -23,8 +24,7 @@ class TestGradeStatsFiltersByStudent:
         stats = university_service.get_grade_stats(student_id=student.id)
 
         assert stats.min == min(expected), (
-            f"[student_id={student.id}] Expected min={min(expected)}, actual={stats.min}. "
-            f"Expected grades={expected}"
+            f"[student_id={student.id}] Expected min={min(expected)}, actual={stats.min}. Expected grades={expected}"
         )
 
     def test_student_stats_max(self, university_service, grade_stats_dataset):
@@ -34,8 +34,7 @@ class TestGradeStatsFiltersByStudent:
         stats = university_service.get_grade_stats(student_id=student.id)
 
         assert stats.max == max(expected), (
-            f"[student_id={student.id}] Expected max={max(expected)}, actual={stats.max}. "
-            f"Expected grades={expected}"
+            f"[student_id={student.id}] Expected max={max(expected)}, actual={stats.max}. Expected grades={expected}"
         )
 
     def test_student_stats_avg(self, university_service, grade_stats_dataset):
@@ -46,8 +45,7 @@ class TestGradeStatsFiltersByStudent:
 
         expected_avg = sum(expected) / len(expected)
         assert stats.avg == pytest.approx(expected_avg), (
-            f"[student_id={student.id}] Expected avg≈{expected_avg}, actual={stats.avg}. "
-            f"Expected grades={expected}"
+            f"[student_id={student.id}] Expected avg≈{expected_avg}, actual={stats.avg}. Expected grades={expected}"
         )
 
 
@@ -70,8 +68,7 @@ class TestGradeStatsFiltersByTeacher:
         stats = university_service.get_grade_stats(teacher_id=teacher.id)
 
         assert stats.min == min(expected), (
-            f"[teacher_id={teacher.id}] Expected min={min(expected)}, actual={stats.min}. "
-            f"Expected grades={expected}"
+            f"[teacher_id={teacher.id}] Expected min={min(expected)}, actual={stats.min}. Expected grades={expected}"
         )
 
     def test_teacher_stats_max(self, university_service, grade_stats_dataset):
@@ -81,8 +78,7 @@ class TestGradeStatsFiltersByTeacher:
         stats = university_service.get_grade_stats(teacher_id=teacher.id)
 
         assert stats.max == max(expected), (
-            f"[teacher_id={teacher.id}] Expected max={max(expected)}, actual={stats.max}. "
-            f"Expected grades={expected}"
+            f"[teacher_id={teacher.id}] Expected max={max(expected)}, actual={stats.max}. Expected grades={expected}"
         )
 
     def test_teacher_stats_avg(self, university_service, grade_stats_dataset):
@@ -93,8 +89,7 @@ class TestGradeStatsFiltersByTeacher:
 
         expected_avg = sum(expected) / len(expected)
         assert stats.avg == pytest.approx(expected_avg), (
-            f"[teacher_id={teacher.id}] Expected avg≈{expected_avg}, actual={stats.avg}. "
-            f"Expected grades={expected}"
+            f"[teacher_id={teacher.id}] Expected avg≈{expected_avg}, actual={stats.avg}. Expected grades={expected}"
         )
 
 
@@ -106,8 +101,7 @@ class TestGradeStatsFiltersByGroup:
         stats = university_service.get_grade_stats(group_id=group.id)
 
         assert stats.count == len(expected), (
-            f"[group_id={group.id}] Expected count={len(expected)}, actual={stats.count}. "
-            f"Expected grades={expected}"
+            f"[group_id={group.id}] Expected count={len(expected)}, actual={stats.count}. Expected grades={expected}"
         )
 
     def test_group_stats_min(self, university_service, grade_stats_dataset):
@@ -117,8 +111,7 @@ class TestGradeStatsFiltersByGroup:
         stats = university_service.get_grade_stats(group_id=group.id)
 
         assert stats.min == min(expected), (
-            f"[group_id={group.id}] Expected min={min(expected)}, actual={stats.min}. "
-            f"Expected grades={expected}"
+            f"[group_id={group.id}] Expected min={min(expected)}, actual={stats.min}. Expected grades={expected}"
         )
 
     def test_group_stats_max(self, university_service, grade_stats_dataset):
@@ -128,8 +121,7 @@ class TestGradeStatsFiltersByGroup:
         stats = university_service.get_grade_stats(group_id=group.id)
 
         assert stats.max == max(expected), (
-            f"[group_id={group.id}] Expected max={max(expected)}, actual={stats.max}. "
-            f"Expected grades={expected}"
+            f"[group_id={group.id}] Expected max={max(expected)}, actual={stats.max}. Expected grades={expected}"
         )
 
     def test_group_stats_avg(self, university_service, grade_stats_dataset):
@@ -140,6 +132,5 @@ class TestGradeStatsFiltersByGroup:
 
         expected_avg = sum(expected) / len(expected)
         assert stats.avg == pytest.approx(expected_avg), (
-            f"[group_id={group.id}] Expected avg≈{expected_avg}, actual={stats.avg}. "
-            f"Expected grades={expected}"
+            f"[group_id={group.id}] Expected avg≈{expected_avg}, actual={stats.avg}. Expected grades={expected}"
         )

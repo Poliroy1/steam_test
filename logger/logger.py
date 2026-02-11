@@ -12,8 +12,9 @@ class Logger:
         os.makedirs(LoggerConfig.LOGS_DIR_NAME)
     __logger = logging.getLogger(LoggerConfig.LOGGER_NAME)
     __logger.setLevel(LoggerConfig.LOGS_LEVEL)
-    __handler1 = RotatingFileHandler(LoggerConfig.LOGS_FILE_NAME, maxBytes=LoggerConfig.MAX_BYTES,
-                                     backupCount=LoggerConfig.BACKUP_COUNT)
+    __handler1 = RotatingFileHandler(
+        LoggerConfig.LOGS_FILE_NAME, maxBytes=LoggerConfig.MAX_BYTES, backupCount=LoggerConfig.BACKUP_COUNT
+    )
     __handler2 = logging.StreamHandler(sys.stdout)
     __formatter = logging.Formatter(LoggerConfig.FORMAT)
     __handler1.setFormatter(__formatter)

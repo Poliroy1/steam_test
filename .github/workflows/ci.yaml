@@ -34,7 +34,7 @@ jobs:
 
       - name: Build tests image
         run: |
-          docker build -f Dockerfile.tests -t autotests:latest .
+          docker build -t autotests:latest .
 
       - name: Start system (docker compose)
         run: |

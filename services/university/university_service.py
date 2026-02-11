@@ -1,12 +1,14 @@
 import os
 import random
 
+from faker import Faker
+
 from services.general.base_service import BaseService
 from services.university.helpers.grade_helper import GradeHelper
 from services.university.helpers.group_helper import GroupHelper
 from services.university.helpers.student_helper import StudentHelper
 from services.university.helpers.teacher_helper import TeacherHelper
-from services.university.models.base_grade import BaseGrade, MIN_GRADE, MAX_GRADE
+from services.university.models.base_grade import MAX_GRADE, MIN_GRADE
 from services.university.models.grade_request import GradeRequest
 from services.university.models.grade_response import GradeResponse
 from services.university.models.grade_static_response import GradeStatisticResponse
@@ -17,7 +19,6 @@ from services.university.models.student_response import StudentResponse
 from services.university.models.teacher_request import TeacherRequest
 from services.university.models.teacher_response import TeacherResponse
 from utils.api_utils import ApiUtils
-from faker import Faker
 
 faker = Faker()
 
@@ -58,15 +59,9 @@ class UniversityService(BaseService):
         teacher_id: int | None = None,
         group_id: int | None = None,
     ) -> GradeStatisticResponse:
-        response = self.grade_helper.get_grade_stats(
-            student_id=student_id,
-            teacher_id=teacher_id,
-            group_id=group_id
-        )
+        response = self.grade_helper.get_grade_stats(student_id=student_id, teacher_id=teacher_id, group_id=group_id)
         return GradeStatisticResponse(**response.json())
 
     def create_random_grade(self, teacher_id: int, student_id: int) -> GradeResponse:
         value = random.randint(MIN_GRADE, MAX_GRADE)
-        return self.create_grade(
-            GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=value)
-        )
+        return self.create_grade(GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=value))

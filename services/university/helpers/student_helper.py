@@ -1,4 +1,5 @@
 import requests
+
 from services.general.helpers.base_helper import BaseHelper
 
 
@@ -15,9 +16,9 @@ class StudentHelper(BaseHelper):
         return response
 
     def get_student(self, student_id: int) -> requests.Response:
-        response = self.api_utils.get(f'{self.ROOT_ENDPOINT}{student_id}')
+        response = self.api_utils.get(f"{self.ROOT_ENDPOINT}{student_id}")
         return response
 
     def delete_student(self, student_id: int) -> requests.Response:
-        response = self.api_utils.delete(f'{self.ROOT_ENDPOINT}{student_id}')
+        response = self.api_utils.delete(f"{self.ROOT_ENDPOINT}{student_id}")
         return response
